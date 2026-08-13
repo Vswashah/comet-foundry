@@ -66,3 +66,4 @@ automatically — no further action needed.
 - No build tooling or dependencies required — everything is plain HTML/CSS/JS.
 - Some content (Team roster, Projects, Blog, Partners) is intentionally left
   as placeholder / "Coming Soon" states pending real information.
+# Comet Foundry
