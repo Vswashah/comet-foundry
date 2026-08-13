@@ -40,6 +40,26 @@ Both outputs will be regenerated from the same source.
 Home, About, Programs, Projects, Team, Partners, Events (+ event detail),
 Blog, Apply, Privacy Policy, Terms of Use.
 
+## CI/CD
+
+Every push and pull request to `main` runs `.github/workflows/ci.yml`, which:
+
+1. Regenerates the site from source (`generate.py` then `build_spa.py`) and
+   fails if the result differs from what's committed — this catches the case
+   where someone edited `generate.py`/`styles.css`/`script.js` but forgot to
+   re-run the generators before committing.
+2. Checks the inline JavaScript in `comet-foundry-spa.html` for syntax errors.
+3. Checks every internal `href="*.html"` link across the site actually
+   points to a file that exists.
+
+If all of that passes **and** the push was to `main`, a second job deploys
+the static files (all `.html` + `styles.css` + `script.js`) to GitHub Pages.
+
+**One-time setup required:** in the repo's Settings → Pages, set "Source" to
+"GitHub Actions" (it defaults to "Deploy from a branch", which the workflow
+won't use). After that, every push to `main` that passes tests deploys
+automatically — no further action needed.
+
 ## Notes
 
 - Fonts are loaded from Google Fonts (Space Grotesk, IBM Plex Mono, Caveat).

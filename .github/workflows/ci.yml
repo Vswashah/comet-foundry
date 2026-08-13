@@ -1,0 +1,112 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Regenerate site from source
+        run: |
+          python3 generate.py
+          python3 build_spa.py
+
+      - name: Fail if generated output is out of sync with committed files
+        run: |
+          if ! git diff --exit-code -- '*.html' '*.css' '*.js'; then
+            echo "::error::Generated files differ from committed output. Run 'python3 generate.py && python3 build_spa.py' locally and commit the result."
+            exit 1
+          fi
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Check inline JS syntax in the single-file SPA
+        run: |
+          python3 -c "
+          html = open('comet-foundry-spa.html').read()
+          start = html.index('<script>') + len('<script>')
+          end = html.index('</script>')
+          open('_spa_extracted.js', 'w').write(html[start:end])
+          "
+          node --check _spa_extracted.js
+
+      - name: Check internal links resolve to real files
+        run: |
+          python3 - <<'EOF'
+          import re, glob, sys
+
+          ok = True
+          html_files = set(glob.glob("*.html"))
+
+          for f in sorted(html_files):
+              content = open(f, encoding="utf-8").read()
+              for href in re.findall(r'href="([a-zA-Z0-9_\-]+\.html)"', content):
+                  if href not in html_files:
+                      print(f"::error file={f}::Broken internal link to {href}")
+                      ok = False
+
+          sys.exit(0 if ok else 1)
+          EOF
+
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Regenerate site
+        run: |
+          python3 generate.py
+          python3 build_spa.py
+
+      - name: Assemble deploy folder
+        run: |
+          mkdir -p dist
+          cp *.html dist/
+          cp styles.css script.js dist/
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
