@@ -52,13 +52,12 @@ Every push and pull request to `main` runs `.github/workflows/ci.yml`, which:
 3. Checks every internal `href="*.html"` link across the site actually
    points to a file that exists.
 
-If all of that passes **and** the push was to `main`, a second job deploys
-the static files (all `.html` + `styles.css` + `script.js`) to GitHub Pages.
+If all of that passes, the PR/push is good to merge or deploy.
 
-**One-time setup required:** in the repo's Settings → Pages, set "Source" to
-"GitHub Actions" (it defaults to "Deploy from a branch", which the workflow
-won't use). After that, every push to `main` that passes tests deploys
-automatically — no further action needed.
+**Deployment** is handled separately by Vercel's native GitHub integration
+(connected to this repo) — every push to `main` deploys automatically there.
+This workflow doesn't deploy anything itself; it's a quality gate, not a
+deploy step.
 
 ## Notes
 
