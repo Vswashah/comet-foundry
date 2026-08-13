@@ -114,7 +114,7 @@ h1.mega span{ display:block; }
 .strip{ border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:26px 0; margin-top:70px; overflow:hidden; white-space:nowrap; }
 .strip-track{ display:inline-flex; gap:48px; font-family:'IBM Plex Mono',monospace; font-size:14px; letter-spacing:.08em; color:var(--ink-soft); animation: scroll 26s linear infinite; }
 .strip-track span{ opacity:.85; }
-@keyframes scroll{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
+@keyframes scroll{ from{ transform:translateX(0);} to{ transform:translateX(-12.5%);} }
 
 /* ---------- SECTION HEADS ---------- */
 section{ padding:100px 0; position:relative; }
