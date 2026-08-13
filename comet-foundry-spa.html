@@ -1,0 +1,1825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comet Foundry — a hacker house at UTD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F7F6F2;
+  --ink:#15161A;
+  --ink-soft:#54565f;
+  --flask:#1F6F5C;
+  --hazard:#FFC72C;
+  --blueprint:#2B3EFF;
+  --line:#dcdad2;
+  --paper-raised:#ffffff;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Space Grotesk', sans-serif;
+  overflow-x:hidden;
+}
+.mono{font-family:'IBM Plex Mono', monospace;}
+.hand{font-family:'Caveat', cursive;}
+::selection{background:var(--hazard); color:var(--ink);}
+
+/* ---------- LAB DOOR ---------- */
+#door{
+  position:fixed; inset:0; z-index:1000;
+  background:var(--ink); color:var(--paper);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  transition: transform .9s cubic-bezier(.76,0,.24,1), opacity .6s ease .3s;
+}
+#door.open{ transform: translateY(-100%); opacity:0; pointer-events:none; }
+.door-status{
+  font-family:'IBM Plex Mono', monospace; font-size:clamp(14px,2vw,18px);
+  letter-spacing:.12em; color:#8f9bd6; margin-bottom:18px;
+}
+.door-status .dot{ display:inline-block; width:8px; height:8px; border-radius:50%; background:#ff5c5c; margin-right:8px; vertical-align:middle; }
+.door-status.open .dot{ background:#4ee08a; }
+#door-title{ font-size:clamp(48px,10vw,120px); font-weight:700; line-height:.95; text-align:center; margin:0 0 40px; }
+#open-btn{
+  font-family:'IBM Plex Mono', monospace; background:none; border:1.5px solid var(--paper);
+  color:var(--paper); padding:16px 32px; font-size:15px; letter-spacing:.08em; cursor:pointer;
+  display:flex; align-items:center; gap:10px; transition: background .25s, color .25s;
+}
+#open-btn:hover{ background:var(--paper); color:var(--ink); }
+#open-btn:focus-visible{ outline:2px solid var(--hazard); outline-offset:3px; }
+#door-meta{ position:absolute; bottom:28px; font-family:'IBM Plex Mono', monospace; font-size:12px; color:#6a6d78; letter-spacing:.06em; }
+
+/* ---------- SITE ---------- */
+main{ visibility:hidden; }
+main.ready{ visibility:visible; }
+.wrap{ max-width:1180px; margin:0 auto; padding:0 32px; }
+
+header.nav{
+  position:sticky; top:0; z-index:100;
+  background:rgba(247,246,242,.88); backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line);
+}
+header.nav .wrap{ display:flex; align-items:center; justify-content:space-between; padding-top:18px; padding-bottom:18px; gap:18px; }
+.brand-mark{ font-weight:700; font-size:18px; letter-spacing:-.01em; text-decoration:none; color:var(--ink); white-space:nowrap; }
+.nav-links{ display:flex; gap:22px; font-family:'IBM Plex Mono',monospace; font-size:13px; flex-wrap:wrap; }
+.nav-links a{ color:var(--ink-soft); text-decoration:none; border-bottom:1px solid transparent; padding-bottom:2px; }
+.nav-links a:hover{ color:var(--ink); border-color:var(--ink); }
+.nav-links a.active{ color:var(--ink); border-color:var(--flask); }
+.nav-cta{
+  font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.06em;
+  background:var(--ink); color:var(--paper); padding:10px 18px; text-decoration:none; white-space:nowrap;
+}
+.nav-cta:hover{ background:#2c2d33; }
+.nav-toggle{
+  display:none; background:none; border:1px solid var(--line); width:42px; height:42px;
+  align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+  font-size:18px; color:var(--ink); border-radius:0;
+}
+.nav-toggle:hover{ border-color:var(--ink); }
+.nav-toggle:focus-visible{ outline:2px solid var(--hazard); outline-offset:2px; }
+.mobile-menu{ display:none; flex-direction:column; border-top:1px solid var(--line); background:var(--paper); }
+.mobile-menu.open{ display:flex; }
+.mobile-menu a{
+  padding:18px 32px; font-family:'IBM Plex Mono',monospace; font-size:15px; letter-spacing:.04em;
+  color:var(--ink); text-decoration:none; border-bottom:1px solid var(--line);
+}
+.mobile-menu a.cta-row{ color:var(--flask); }
+.mobile-menu a.active{ color:var(--flask); }
+@media (max-width:900px){
+  .nav-links{ display:none; }
+  .nav-cta{ display:none; }
+  .nav-toggle{ display:flex; }
+}
+
+/* ---------- PAGE HERO (interior pages) ---------- */
+.page-hero{ padding:72px 0 40px; }
+.breadcrumb{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft); margin-bottom:20px; }
+.breadcrumb a{ color:var(--ink-soft); }
+.page-hero h1{
+  font-size:clamp(40px,8vw,90px); line-height:.92; font-weight:700; margin:0;
+  text-transform:uppercase; letter-spacing:-.01em;
+}
+.page-hero .hero-note{ display:inline-block; margin-top:18px; font-size:22px; color:var(--flask); transform:rotate(-4deg); }
+.page-hero p.lede{ max-width:560px; margin-top:22px; font-size:18px; line-height:1.55; color:var(--ink-soft); }
+
+/* ---------- HOME HERO ---------- */
+.hero{ position:relative; padding:100px 0 60px; }
+.eyebrow{ font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.1em; color:var(--flask); display:flex; align-items:center; gap:10px; margin-bottom:26px; }
+.eyebrow .dot{ width:7px; height:7px; border-radius:50%; background:var(--flask); }
+h1.mega{ font-size:clamp(64px, 15vw, 190px); line-height:.85; font-weight:700; letter-spacing:-.02em; margin:0; text-transform:uppercase; }
+h1.mega span{ display:block; }
+.hero-note{ position:absolute; right:6%; top:18%; font-size:clamp(20px,2.4vw,28px); color:var(--flask); transform:rotate(-6deg); animation: float 5s ease-in-out infinite; }
+.hero-sub{ max-width:560px; margin-top:34px; font-size:19px; line-height:1.55; color:var(--ink-soft); }
+.hero-tags{ display:flex; flex-wrap:wrap; gap:10px; margin-top:32px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; }
+.tag{ border:1px solid var(--line); padding:6px 12px; color:var(--ink-soft); }
+@keyframes float{ 0%,100%{ transform:rotate(-6deg) translateY(0); } 50%{ transform:rotate(-3deg) translateY(-6px); } }
+
+/* ---------- MARQUEE STRIP ---------- */
+.strip{ border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:26px 0; margin-top:70px; overflow:hidden; white-space:nowrap; }
+.strip-track{ display:inline-flex; gap:48px; font-family:'IBM Plex Mono',monospace; font-size:14px; letter-spacing:.08em; color:var(--ink-soft); animation: scroll 26s linear infinite; }
+.strip-track span{ opacity:.85; }
+@keyframes scroll{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
+
+/* ---------- SECTION HEADS ---------- */
+section{ padding:100px 0; position:relative; }
+section.tight{ padding:70px 0; }
+.sec-head{ margin-bottom:56px; position:relative; }
+.sec-head .num{ font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--flask); letter-spacing:.1em; display:block; margin-bottom:14px; }
+.sec-head h2{ font-size:clamp(36px,6vw,64px); margin:0; line-height:1; font-weight:700; text-transform:uppercase; letter-spacing:-.01em; }
+.sec-head p{ margin-top:16px; max-width:520px; color:var(--ink-soft); font-size:16px; }
+.sec-head.center{ text-align:center; margin-left:auto; margin-right:auto; }
+.sec-head.center p{ margin-left:auto; margin-right:auto; }
+
+/* ---------- ABOUT / DOC CARD ---------- */
+.about-grid{ display:grid; grid-template-columns:1.1fr .9fr; gap:60px; align-items:start; }
+@media (max-width:860px){ .about-grid{ grid-template-columns:1fr; } }
+.about-text p{ font-size:20px; line-height:1.6; margin:0 0 22px; }
+.about-text p:first-child{ font-weight:500; }
+.doc-card{ background:var(--paper-raised); border:1px solid var(--line); padding:26px 24px; position:relative; }
+.doc-card .hand{ position:absolute; top:-26px; left:14px; font-size:22px; color:var(--blueprint); transform:rotate(-4deg); }
+.doc-card h3{ font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.08em; margin:0 0 14px; color:var(--ink-soft); text-transform:uppercase;}
+.doc-card ul{ margin:0; padding:0; list-style:none; font-size:15px; }
+.doc-card li{ padding:10px 0; border-top:1px solid var(--line); display:flex; justify-content:space-between; gap:12px;}
+.doc-card li:first-child{ border-top:none; }
+.doc-card li .v{ font-family:'IBM Plex Mono',monospace; color:var(--ink-soft); font-size:13px; }
+
+/* ---------- VALUES GRID (about page) ---------- */
+.values-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+@media (max-width:900px){ .values-grid{ grid-template-columns:repeat(2,1fr);} }
+@media (max-width:560px){ .values-grid{ grid-template-columns:1fr;} }
+.value-card{ background:var(--paper-raised); padding:30px 24px; min-height:180px; display:flex; flex-direction:column; justify-content:space-between; }
+.value-card .code{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft); }
+.value-card h3{ font-size:19px; margin:16px 0 8px; text-transform:uppercase; line-height:1.1; }
+.value-card p{ font-size:14px; color:var(--ink-soft); margin:0; }
+
+/* ---------- LABS / PROGRAMS ---------- */
+.labs-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+@media (max-width:900px){ .labs-grid{ grid-template-columns:repeat(2,1fr);} }
+@media (max-width:560px){ .labs-grid{ grid-template-columns:1fr;} }
+.lab-card{ background:var(--paper-raised); padding:34px 26px; min-height:280px; display:flex; flex-direction:column; justify-content:space-between; position:relative; transition:background .2s; }
+.lab-card:hover{ background:#fdfcf9; }
+.lab-card .code{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft); letter-spacing:.06em;}
+.lab-card h3{ font-size:26px; margin:20px 0 10px; text-transform:uppercase; line-height:1.05; }
+.lab-card p.cmd{ font-size:14px; color:var(--ink-soft); margin:0 0 12px; }
+.lab-card .detail{ font-size:13px; color:var(--ink-soft); line-height:1.5; margin-bottom:16px; }
+.lab-card a.lab-link{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--flask); text-decoration:none; border-bottom:1px solid var(--flask); align-self:flex-start; }
+.lab-actions{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:auto; }
+.lab-card .stamp{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--flask); border:1px solid var(--flask); padding:4px 8px; white-space:nowrap; opacity:0; transform:translateX(-4px); transition:opacity .2s, transform .2s; }
+.lab-card:hover .stamp{ opacity:1; transform:translateX(0); }
+.lab-card:nth-child(2) .stamp{ color:var(--blueprint); border-color:var(--blueprint); }
+.lab-card:nth-child(3) .stamp{ color:#b5860b; border-color:#b5860b; }
+.lab-card:nth-child(4) .stamp{ color:#a03d5b; border-color:#a03d5b; }
+.lab-annot{ position:absolute; top:-14px; right:24px; font-size:19px; color:var(--ink-soft); transform:rotate(3deg); }
+
+/* ---------- CARD GRIDS (projects / team / partners / blog) ---------- */
+.card-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+@media (max-width:900px){ .card-grid{ grid-template-columns:repeat(2,1fr);} }
+@media (max-width:600px){ .card-grid{ grid-template-columns:1fr;} }
+
+.project-card, .person-card, .partner-card, .post-card{
+  background:var(--paper-raised); border:1px solid var(--line); padding:0; overflow:hidden;
+  display:flex; flex-direction:column;
+}
+.card-media{ height:160px; background:linear-gradient(135deg, var(--flask), var(--blueprint)); position:relative; }
+.card-media.alt{ background:linear-gradient(135deg, var(--hazard), var(--flask)); }
+.card-media.alt2{ background:linear-gradient(135deg, var(--blueprint), #a03d5b); }
+.card-media .tagpill{ position:absolute; bottom:10px; left:12px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:#fff; background:rgba(0,0,0,.35); padding:4px 8px; letter-spacing:.05em; }
+.card-body{ padding:20px; display:flex; flex-direction:column; gap:8px; flex:1; }
+.card-body h3{ margin:0; font-size:19px; text-transform:uppercase; line-height:1.15; }
+.card-body p{ margin:0; font-size:14px; color:var(--ink-soft); line-height:1.5; }
+.card-body .mono-small{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-soft); letter-spacing:.05em; }
+.card-body a.card-link{ margin-top:auto; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--flask); text-decoration:none; border-bottom:1px solid var(--flask); align-self:flex-start; }
+
+.coming-soon-card{
+  border:1px dashed var(--line); background:transparent;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:60px 24px; min-height:260px; gap:12px;
+}
+.coming-soon-card .tag{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.08em; color:var(--ink-soft); border:1px solid var(--line); padding:5px 10px; }
+.coming-soon-card h3{ font-size:18px; margin:2px 0 0; text-transform:uppercase; color:var(--ink-soft); font-weight:700; }
+.coming-soon-card p{ font-size:13px; color:var(--ink-soft); margin:0; max-width:220px; line-height:1.5; }
+
+/* team specifics */
+.person-card .card-media{ height:180px; background:var(--ink); display:flex; align-items:center; justify-content:center; color:var(--paper); font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.05em; }
+.person-card.lead .card-media{ background:var(--flask); }
+.card-links{ display:flex; flex-wrap:wrap; gap:14px; margin-top:6px; }
+.card-links a{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--flask); text-decoration:none; border-bottom:1px solid var(--flask); }
+.card-links a.linkedin-placeholder{ color:var(--ink-soft); border-color:var(--line); }
+.card-links a.linkedin-placeholder:hover{ color:var(--ink); border-color:var(--ink); }
+
+/* ---------- PORTRAIT PROFILE GRID (Team page) ---------- */
+.section-label{ font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--flask); letter-spacing:.1em; margin-bottom:22px; display:block; }
+.profile-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(168px, 1fr)); gap:28px 20px; }
+.profile-card{ display:flex; flex-direction:column; }
+.profile-photo{
+  position:relative; width:100%; aspect-ratio:3/4; background:var(--ink);
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+}
+.profile-photo .abbr{ font-family:'IBM Plex Mono',monospace; font-size:15px; letter-spacing:.06em; color:rgba(255,255,255,.45); }
+.profile-photo.lead{ background:var(--flask); }
+.profile-photo.lead .abbr{ color:rgba(255,255,255,.6); }
+.profile-tag{
+  position:absolute; top:10px; left:10px; font-family:'IBM Plex Mono',monospace; font-size:8.5px;
+  letter-spacing:.07em; color:#fff; background:rgba(0,0,0,.32); padding:4px 7px;
+}
+.profile-body{ padding-top:12px; }
+.profile-body h3{ font-size:15px; margin:0 0 3px; font-weight:700; line-height:1.2; letter-spacing:-.005em; }
+.profile-role{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--ink-soft); margin:0 0 10px; line-height:1.4; }
+.profile-links{ display:flex; flex-direction:column; gap:5px; }
+.profile-links a{
+  font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--flask); text-decoration:none;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.profile-links a.linkedin-placeholder{ color:var(--ink-soft); }
+.profile-links a.linkedin-placeholder:hover{ color:var(--ink); }
+@media (max-width:560px){ .profile-grid{ grid-template-columns:repeat(auto-fill, minmax(130px, 1fr)); gap:20px 14px; } }
+
+/* partners specifics */
+.partner-card{ flex-direction:row; align-items:center; gap:0; }
+.partner-card .card-media{ width:110px; height:auto; align-self:stretch; flex-shrink:0; }
+
+/* ---------- EVENTS ---------- */
+.event-card{ background:var(--ink); color:var(--paper); display:grid; grid-template-columns:.9fr 1.1fr; border-radius:2px; position:relative; }
+@media (max-width:760px){ .event-card{ grid-template-columns:1fr; } }
+.event-left{ padding:48px 44px; border-right:1px solid #2c2d33; }
+@media (max-width:760px){ .event-left{ border-right:none; border-bottom:1px solid #2c2d33; } }
+.event-date{ font-family:'IBM Plex Mono',monospace; color:var(--hazard); font-size:14px; letter-spacing:.08em; margin-bottom:18px; }
+.event-left h3{ font-size:clamp(28px,4vw,40px); margin:0 0 16px; line-height:1.05; text-transform:uppercase; }
+.event-left p{ color:#c7c7cf; font-size:15px; line-height:1.6; max-width:380px; }
+.event-right{ padding:48px 44px; display:flex; flex-direction:column; justify-content:center; gap:16px; }
+.event-right .row{ display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:13px; color:#9a9aa5; border-bottom:1px solid #2c2d33; padding-bottom:12px; }
+.event-right .row b{ color:var(--paper); font-weight:500; }
+.rsvp-btn{ margin-top:10px; align-self:flex-start; background:var(--hazard); color:var(--ink); border:none; font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.06em; padding:14px 26px; cursor:pointer; text-decoration:none; display:inline-block;}
+.rsvp-btn:hover{ background:#ffd75c; }
+.event-annot{ position:absolute; top:-34px; left:40px; font-size:20px; color:var(--flask); transform:rotate(-4deg); }
+
+.event-list-row{
+  display:grid; grid-template-columns:120px 1fr auto; gap:20px; align-items:center;
+  padding:22px 0; border-top:1px solid var(--line); text-decoration:none; color:var(--ink);
+}
+.event-list-row:last-child{ border-bottom:1px solid var(--line); }
+.event-list-row .elr-date{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--flask); }
+.event-list-row h4{ margin:0 0 4px; font-size:19px; text-transform:uppercase; }
+.event-list-row p{ margin:0; font-size:13px; color:var(--ink-soft); }
+.event-list-row .elr-arrow{ font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--ink-soft); }
+.event-list-row:hover .elr-arrow{ color:var(--ink); }
+@media (max-width:640px){ .event-list-row{ grid-template-columns:1fr; gap:6px; } }
+
+.past-toggle{ font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.06em; background:none; border:1px solid var(--line); padding:12px 20px; cursor:pointer; margin-top:44px; }
+.past-toggle:hover{ border-color:var(--ink); }
+#past-events{ display:none; margin-top:10px; }
+#past-events.show{ display:block; }
+
+/* ---------- CALENDAR ---------- */
+.cal-card{ background:var(--paper-raised); border:1px solid var(--line); }
+.cal-toolbar{ display:flex; align-items:center; gap:14px; padding:20px 22px; border-bottom:1px solid var(--line); flex-wrap:wrap; }
+.cal-btn{ font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; background:none; border:1px solid var(--line); padding:9px 16px; cursor:pointer; color:var(--ink); }
+.cal-btn:hover{ border-color:var(--ink); }
+.cal-nav{ display:flex; align-items:center; gap:2px; }
+.cal-arrow{ background:none; border:none; cursor:pointer; font-size:16px; color:var(--ink-soft); padding:8px 12px; font-family:'IBM Plex Mono',monospace; }
+.cal-arrow:hover{ color:var(--ink); }
+.cal-month-label{ font-size:20px; font-weight:700; margin-left:2px; text-transform:uppercase; letter-spacing:-.01em; }
+.cal-view{ margin-left:auto; font-family:'IBM Plex Mono',monospace; font-size:12px; border:1px solid var(--line); padding:9px 16px; color:var(--ink-soft); }
+.cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); }
+.cal-dow{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.06em; color:var(--ink-soft); text-align:center; padding:12px 4px; border-bottom:1px solid var(--line); }
+.cal-cell{ min-height:92px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); padding:8px; position:relative; }
+.cal-cell:nth-child(7n){ border-right:none; }
+.cal-cell.muted{ background:#fbfaf7; }
+.cal-cell.muted .date-num{ opacity:.5; }
+.cal-cell .date-num{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft); }
+.cal-cell.today .date-num{ display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; background:var(--flask); color:#fff; border-radius:50%; }
+.cal-pill{ margin-top:8px; display:block; background:var(--flask); color:#fff; font-family:'IBM Plex Mono',monospace; font-size:11px; padding:4px 8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-decoration:none; cursor:pointer; border:none; width:100%; text-align:left; }
+.cal-pill:hover{ background:#175c4c; }
+@media (max-width:760px){ .cal-cell{ min-height:64px; padding:5px; } .cal-pill{ font-size:9px; padding:3px 5px; } .cal-dow{ font-size:9px; } }
+.cal-footer{ display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; padding:18px 22px; border-top:1px solid var(--line); }
+.cal-footer .who{ font-size:13px; }
+.cal-footer .who b{ display:block; font-size:14px; }
+.cal-footer .tz{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-soft); margin-top:4px; }
+.cal-footer a.outlook-link{ font-size:13px; color:var(--flask); text-decoration:none; border-bottom:1px solid var(--flask); }
+.cal-provider{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; color:var(--ink-soft); display:flex; align-items:center; gap:6px; }
+.cal-provider .sq{ display:grid; grid-template-columns:repeat(2,6px); grid-template-rows:repeat(2,6px); gap:2px; }
+.cal-provider .sq span{ width:6px; height:6px; display:block; }
+.cal-provider .sq span:nth-child(1){ background:#f25022; }
+.cal-provider .sq span:nth-child(2){ background:#7fba00; }
+.cal-provider .sq span:nth-child(3){ background:#00a4ef; }
+.cal-provider .sq span:nth-child(4){ background:#ffb900; }
+.cal-cta-wrap{ text-align:center; margin-top:36px; }
+.cal-cta{ background:var(--ink); color:var(--paper); border:none; font-family:'IBM Plex Mono',monospace; font-size:14px; letter-spacing:.05em; padding:18px 34px; cursor:pointer; }
+.cal-cta:hover{ background:#2c2d33; }
+.cal-cta-note{ margin-top:12px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft); }
+
+/* ---------- JOIN / APPLY FORM ---------- */
+.join{ text-align:center; padding-top:60px; padding-bottom:60px; }
+.join .sec-head{ display:flex; flex-direction:column; align-items:center; text-align:center; margin-bottom:34px;}
+.join .sec-head p{ max-width:460px; }
+.join-form{ display:flex; gap:10px; justify-content:center; max-width:520px; margin:0 auto; flex-wrap:wrap; }
+.join-form input{ flex:1; min-width:220px; padding:16px 18px; border:1px solid var(--line); background:var(--paper-raised); font-family:'Space Grotesk',sans-serif; font-size:15px; }
+.join-form input:focus-visible{ outline:2px solid var(--blueprint); outline-offset:2px; }
+.join-form button{ background:var(--ink); color:var(--paper); border:none; font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.06em; padding:0 26px; cursor:pointer; }
+.join-form button:hover{ background:#2c2d33; }
+.join-note{ margin-top:16px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft); }
+
+.apply-form{ max-width:640px; margin:0 auto; display:flex; flex-direction:column; gap:20px; text-align:left; }
+.apply-form label{ font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.05em; color:var(--ink-soft); display:block; margin-bottom:8px; }
+.apply-form input, .apply-form select, .apply-form textarea{
+  width:100%; padding:14px 16px; border:1px solid var(--line); background:var(--paper-raised);
+  font-family:'Space Grotesk',sans-serif; font-size:15px;
+}
+.apply-form textarea{ resize:vertical; min-height:110px; }
+.apply-form input:focus-visible, .apply-form select:focus-visible, .apply-form textarea:focus-visible{ outline:2px solid var(--blueprint); outline-offset:2px; }
+.apply-form button{ background:var(--ink); color:var(--paper); border:none; font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.06em; padding:16px 26px; cursor:pointer; align-self:flex-start; }
+.apply-form button:hover{ background:#2c2d33; }
+.apply-note{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft); }
+
+/* ---------- BLOG POST ---------- */
+.post-body{ max-width:680px; margin:0 auto; font-size:18px; line-height:1.75; }
+.post-body p{ margin:0 0 22px; }
+.post-meta{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft); margin-bottom:36px; text-align:center; }
+
+/* ---------- LEGAL PAGES ---------- */
+.legal-body{ max-width:760px; margin:0 auto; font-size:16px; line-height:1.7; }
+.legal-effective{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft); margin-bottom:44px; }
+.legal-body h2{ font-size:19px; margin:44px 0 14px; padding-top:24px; border-top:1px solid var(--line); text-transform:none; letter-spacing:-.005em; }
+.legal-body h2:first-of-type{ margin-top:0; padding-top:0; border-top:none; }
+.legal-body p{ margin:0 0 16px; color:var(--ink-soft); }
+.legal-body ul{ margin:0 0 16px; padding-left:22px; color:var(--ink-soft); }
+.legal-body li{ margin-bottom:8px; }
+.legal-body .legal-contact{ margin-top:44px; padding-top:24px; border-top:1px solid var(--line); font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--ink-soft); }
+.legal-body strong{ color:var(--ink); }
+.legal-table{ width:100%; border-collapse:collapse; margin:0 0 20px; font-size:14px; }
+.legal-table th{ text-align:left; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.05em; color:var(--ink-soft); border-bottom:1px solid var(--ink); padding:8px 12px 8px 0; }
+.legal-table td{ vertical-align:top; padding:12px 12px 12px 0; border-bottom:1px solid var(--line); color:var(--ink-soft); }
+.legal-table td:first-child{ color:var(--ink); font-weight:500; white-space:nowrap; }
+@media (max-width:600px){ .legal-table, .legal-table thead, .legal-table tbody, .legal-table th, .legal-table td, .legal-table tr{ display:block; } .legal-table thead{ display:none; } .legal-table tr{ border-bottom:1px solid var(--line); padding:10px 0; } .legal-table td{ border-bottom:none; padding:2px 0; } .legal-table td:first-child{ margin-top:8px; } }
+
+/* ---------- FOOTER ---------- */
+footer{ border-top:1px solid var(--line); padding:44px 0 34px; }
+footer .footer-top{ display:flex; justify-content:space-between; gap:40px; flex-wrap:wrap; margin-bottom:34px; }
+footer .footer-brand{ max-width:320px; }
+footer .footer-brand h4{ margin:0 0 10px; font-size:18px; text-transform:uppercase; }
+footer .footer-brand p{ margin:0; font-size:14px; color:var(--ink-soft); }
+footer .footer-links{ display:flex; gap:56px; flex-wrap:wrap; }
+footer .footer-links h5{ font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.06em; color:var(--ink-soft); margin:0 0 12px; text-transform:uppercase; }
+footer .footer-links ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+footer .footer-links a{ color:var(--ink); text-decoration:none; font-size:14px; }
+footer .footer-links a:hover{ color:var(--flask); }
+.social-icons{ display:flex; gap:14px; margin-top:14px; }
+.social-icons a{ color:var(--ink-soft); display:inline-flex; align-items:center; justify-content:center; }
+.social-icons a:hover{ color:var(--flask); }
+.social-icons svg{ width:18px; height:18px; fill:currentColor; }
+footer .footer-bottom{ display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:12px; border-top:1px solid var(--line); padding-top:22px; }
+footer .footer-bottom .fb-right{ text-align:right; }
+footer .footer-easter{ text-align:center; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.04em; color:var(--ink-soft); white-space:nowrap; }
+@media (max-width:700px){
+  footer .footer-bottom{ grid-template-columns:1fr; text-align:center; }
+  footer .footer-bottom .fb-right{ text-align:center; }
+  footer .footer-easter{ white-space:normal; }
+}
+footer .mono{ font-size:12px; color:var(--ink-soft); letter-spacing:.04em; }
+
+/* ---------- I'M BORED ---------- */
+#bored-btn{
+  position:fixed; right:22px; bottom:22px; z-index:200;
+  background:var(--ink); color:var(--paper); border:none;
+  font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.06em;
+  padding:14px 20px; cursor:pointer; display:flex; align-items:center; gap:8px;
+  box-shadow:0 6px 20px rgba(0,0,0,.18);
+}
+#bored-btn:hover{ background:#2c2d33; }
+#bored-btn:focus-visible{ outline:2px solid var(--hazard); outline-offset:3px; }
+#bored-popup{
+  position:fixed; right:22px; bottom:78px; z-index:200;
+  background:var(--paper-raised); border:1px solid var(--ink); padding:18px 20px; max-width:260px;
+  font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft);
+  opacity:0; transform:translateY(8px) rotate(-1deg); pointer-events:none; transition:opacity .2s, transform .2s;
+}
+#bored-popup.show{ opacity:1; transform:translateY(0) rotate(-1deg); pointer-events:auto; }
+#bored-popup .result{ font-family:'Caveat',cursive; font-size:26px; color:var(--ink); line-height:1.1; margin-bottom:6px; }
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+}
+
+.route{ display:none; }
+.route.active{ display:block; }
+main{ visibility:visible !important; }
+
+</style>
+</head>
+<body>
+
+  <div id="door">
+    <div class="door-status mono" id="door-status"><span class="dot"></span>LAB STATUS: CLOSED</div>
+    <h1 id="door-title">COMET<br>FOUNDRY</h1>
+    <button id="open-btn">OPEN LAB →</button>
+    <div id="door-meta" class="mono">EST. 2026 / UT DALLAS / LAB 01</div>
+  </div>
+
+  <main id="main">
+
+    <header class="nav">
+      <div class="wrap">
+        <a class="brand-mark" href="#/" data-route="home">COMET FOUNDRY</a>
+        <nav class="nav-links">
+          <a href="#/about" data-route="about">About</a>
+          <a href="#/programs" data-route="programs">Programs</a>
+          <a href="#/projects" data-route="projects">Projects</a>
+          <a href="#/team" data-route="team">Team</a>
+          <a href="#/partners" data-route="partners">Partners</a>
+          <a href="#/events" data-route="events">Events</a>
+          <a href="#/blog" data-route="blog">Blog</a>
+        </nav>
+        <a class="nav-cta" href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=HR0ojU2c90uxbgMtFd6fbIhHjy7i2rpHt7VcaeT3yedUMkQwTTU4TkpUNFczMVQzS0cwUUVaWEw0WC4u&route=shorturl&b2b=true" target="_blank" rel="noopener">APPLY →</a>
+        <button id="nav-toggle" class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+      </div>
+      <div id="mobile-menu" class="mobile-menu">
+        <a href="#/about" data-route="about">About</a>
+        <a href="#/programs" data-route="programs">Programs</a>
+        <a href="#/projects" data-route="projects">Projects</a>
+        <a href="#/team" data-route="team">Team</a>
+        <a href="#/partners" data-route="partners">Partners</a>
+        <a href="#/events" data-route="events">Events</a>
+        <a href="#/blog" data-route="blog">Blog</a>
+        <a href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=HR0ojU2c90uxbgMtFd6fbIhHjy7i2rpHt7VcaeT3yedUMkQwTTU4TkpUNFczMVQzS0cwUUVaWEw0WC4u&route=shorturl&b2b=true" target="_blank" rel="noopener" class="cta-row">Apply →</a>
+      </div>
+    </header>
+
+<section class="route active" id="route-home" data-path="/" data-title="Home">
+
+    <section class="hero">
+      <div class="wrap">
+        <div class="eyebrow"><span class="dot"></span>LAB STATUS: OPEN</div>
+        <h1 class="mega"><span>COMET</span><span>FOUNDRY</span></h1>
+        <div class="hero-note hand">a hacker house at UTD :)</div>
+        <p class="hero-sub">A hacker house for people who'd rather build the weird thing than plan the safe one. Yes, this is technically a student org. We're figuring it out too.</p>
+        <div class="hero-tags">
+          <span class="tag">NO PERFECT IDEAS. JUST INTERESTING ONES.</span>
+          <span class="tag">MADE AT UTD</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="strip">
+      <div class="strip-track mono">
+        <span>IDEA → 01</span><span>TEST → 02</span><span>BUILD → 03</span><span>SHIP → 04</span><span>REPEAT → ∞</span>
+        <span>IDEA → 01</span><span>TEST → 02</span><span>BUILD → 03</span><span>SHIP → 04</span><span>REPEAT → ∞</span>
+      </div>
+    </div>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="num">EXP 000 / WHAT WE ARE</span>
+          <h2>The Lab, in one paragraph</h2>
+        </div>
+        <div class="about-grid">
+          <div class="about-text">
+            <p>Comet Foundry is a space at UTD for building things nobody assigned you.</p>
+            <p>No club meetings that go nowhere, no "great idea, let's revisit next semester." Just a room, some people who ship, and a running list of experiments in progress.</p>
+            <a class="lab-link mono" href="#/about" data-route="about" style="border-bottom:1px solid var(--flask); color:var(--flask); text-decoration:none; font-size:13px;">Read the full story →</a>
+          </div>
+          <div class="doc-card">
+            <span class="hand">currently cooking</span>
+            <h3>Active Experiments</h3>
+            <ul class="mono">
+              <li><span>Peer matching for team formation</span><span class="v">TESTING</span></li>
+              <li><span>Micro-grants for weekend builds</span><span class="v">LIVE</span></li>
+              <li><span>Open critique nights</span><span class="v">NO RESULTS YET</span></li>
+              <li><span>Alumni founder network</span><span class="v">IDEA → 01</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="num">EXP 001 / HOW WE HELP</span>
+          <h2>Four Labs</h2>
+          <p>Not departments. Just the four things worth doing here, sorted by what you're actually in the mood for.</p>
+        </div>
+        <div class="labs-grid">
+          <div class="lab-card">
+            <span class="lab-annot hand">seriously, anything</span>
+            <div>
+              <span class="code mono">LAB / 01</span>
+              <h3>Build Lab</h3>
+              <p class="cmd mono">Make things.</p>
+            </div>
+            <div class="lab-actions">
+              <a class="lab-link" href="#/programs" data-route="programs">See what's on →</a>
+              <span class="stamp">MAKE →</span>
+            </div>
+          </div>
+          <div class="lab-card">
+            <div>
+              <span class="code mono">LAB / 02</span>
+              <h3>Think Lab</h3>
+              <p class="cmd mono">Have an opinion.</p>
+            </div>
+            <div class="lab-actions">
+              <a class="lab-link" href="#/programs" data-route="programs">See what's on →</a>
+              <span class="stamp">preferably controversial</span>
+            </div>
+          </div>
+          <div class="lab-card">
+            <div>
+              <span class="code mono">LAB / 03</span>
+              <h3>Network Lab</h3>
+              <p class="cmd mono">Meet people.</p>
+            </div>
+            <div class="lab-actions">
+              <a class="lab-link" href="#/programs" data-route="programs">See what's on →</a>
+              <span class="stamp">the useful kind</span>
+            </div>
+          </div>
+          <div class="lab-card">
+            <div>
+              <span class="code mono">LAB / 04</span>
+              <h3>After Hours</h3>
+              <p class="cmd mono">Touch grass. 😂</p>
+            </div>
+            <div class="lab-actions">
+              <a class="lab-link" href="#/programs" data-route="programs">See what's on →</a>
+              <span class="stamp">occasionally</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="num">EXP 002 / WHO'S IN THE ROOM</span>
+          <h2>Partner Spotlight</h2>
+        </div>
+        <div class="partner-card" style="max-width:640px;">
+          <div class="card-media">
+            <span class="tagpill mono">FEATURED PARTNER</span>
+          </div>
+          <div class="card-body">
+            <h3>Resilient Privacy</h3>
+            <p>Comet Foundry's founding Industry Partner — advisory only, non-voting. Coordinates mentorship and internship referrals for opted-in members.</p>
+            <a class="card-link" href="#/partners" data-route="partners">See all partners →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="num">EXP 003 / WHAT'S HAPPENING</span>
+          <h2>Next Up</h2>
+        </div>
+        <div class="event-card">
+          <span class="event-annot hand">you should probably come to this</span>
+          <div class="event-left">
+            <div class="event-date">AUG 24 / 7:00 PM</div>
+            <h3>Foundry Kickoff Night</h3>
+            <p>First open house of the semester. Tour the space, pitch a half-formed idea, find someone to build it with.</p>
+          </div>
+          <div class="event-right">
+            <div class="row"><span>STATUS</span><b>EXPERIMENT IN PROGRESS</b></div>
+            <div class="row"><span>LOCATION</span><b>UT Dallas — Lab 01</b></div>
+            <a class="rsvp-btn" href="#/events/kickoff-night" data-route="event-detail">RSVP →</a>
+          </div>
+        </div>
+        <div style="text-align:right; margin-top:24px;">
+          <a class="lab-link mono" href="#/events" data-route="events" style="color:var(--ink-soft); border-bottom:1px solid var(--line); text-decoration:none; font-size:13px;">See all events →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="join">
+      <div class="wrap">
+        <div class="sec-head center">
+          <span class="num mono">EXP 004 / GET IN</span>
+          <h2>Join The Foundry</h2>
+          <p>One email. We'll tell you when the door's open.</p>
+        </div>
+        <form class="join-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='ADDED ✓';">
+          <input type="email" placeholder="you@utdallas.edu" required aria-label="Email address">
+          <button type="submit">JOIN FOUNDRY →</button>
+        </form>
+        <div class="join-note">NO SPAM. NO PERFECT IDEAS. JUST INTERESTING ONES. &nbsp;·&nbsp; <a href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=HR0ojU2c90uxbgMtFd6fbIhHjy7i2rpHt7VcaeT3yedUMkQwTTU4TkpUNFczMVQzS0cwUUVaWEw0WC4u&route=shorturl&b2b=true" target="_blank" rel="noopener" style="color:var(--ink-soft);">Full application →</a></div>
+      </div>
+    </section>
+
+</section>
+<section class="route" id="route-about" data-path="/about" data-title="About">
+
+    <section class="page-hero">
+      <div class="wrap">
+        <div class="breadcrumb"><a href="#/" data-route="home">Home</a> / About</div>
+        <h1>The Story</h1>
+        <span class="hero-note hand">why a hacker house?</span>
+        <p class="lede">Comet Foundry started because the good ideas at UTD kept dying in group chats instead of becoming things.</p>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap about-grid">
+        <div class="about-text">
+          <p>We're a small group of students who got tired of waiting for permission to build. So we started a room.</p>
+          <p>No advisor sign-off required to try something. No semester-long approval process. If you want to build it, test it, or argue about it, there's a lab for that — starting this week, not next year.</p>
+          <p>Comet Foundry isn't a résumé line. It's a space that assumes you're capable of more than a class project, and gets out of your way.</p>
+        </div>
+        <div class="doc-card">
+          <span class="hand">the short version</span>
+          <h3>Why A Hacker House</h3>
+          <ul class="mono">
+            <li><span>Space that's open late</span><span class="v">YES</span></li>
+            <li><span>People who'll actually build with you</span><span class="v">YES</span></li>
+            <li><span>Gatekeeping by GPA or résumé</span><span class="v">NO</span></li>
+            <li><span>Meetings that could've been an email</span><span class="v">NO</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="num">VALUES</span>
+          <h2>What We Actually Believe</h2>
+        </div>
+        <div class="values-grid">
+          <div class="value-card">
+            <span class="code mono">01</span>
+            <div>
+              <h3>Every Background Welcome</h3>
+              <p>CS major, art major, undeclared — if you want to build, there's a seat.</p>
+            </div>
+          </div>
+          <div class="value-card">
+            <span class="code mono">02</span>
+            <div>
+              <h3>Ideas Over Résumés</h3>
+              <p>We care what you want to make, not what's already on your LinkedIn.</p>
+            </div>
+          </div>
+          <div class="value-card">
+            <span class="code mono">03</span>
+            <div>
+              <h3>Bias Toward Shipping</h3>
+              <p>A rough thing that exists beats a perfect thing that doesn't.</p>
+            </div>
+          </div>
+          <div class="value-card">
+            <span class="code mono">04</span>
+            <div>
+              <h3>Community Over Competition</h3>
+              <p>We'd rather you find a co-founder here than a rival.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="join">
+      <div class="wrap">
+        <div class="sec-head center">
+          <span class="num mono">READY?</span>
+          <h2>Come Build With Us</h2>
+        </div>
+        <a class="rsvp-btn" href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=HR0ojU2c90uxbgMtFd6fbIhHjy7i2rpHt7VcaeT3yedUMkQwTTU4TkpUNFczMVQzS0cwUUVaWEw0WC4u&route=shorturl&b2b=true" target="_blank" rel="noopener" style="background:var(--ink); color:var(--paper);">APPLY TO JOIN →</a>
+      </div>
+    </section>
+
+</section>
+<section class="route" id="route-programs" data-path="/programs" data-title="Programs">
+
+    <section class="page-hero">
+      <div class="wrap">
+        <div class="breadcrumb"><a href="#/" data-route="home">Home</a> / Programs</div>
+        <h1>Four Labs</h1>
+        <span class="hero-note hand">pick your mood</span>
+        <p class="lede">Not departments — just the four things worth doing here. Drop into whichever matches what you're in the mood for this week.</p>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="labs-grid">
+          <div class="lab-card" style="min-height:340px;">
+            <span class="lab-annot hand">seriously, anything</span>
+            <div>
+              <span class="code mono">LAB / 01</span>
+              <h3>Build Lab</h3>
+              <p class="cmd mono">Make things.</p>
+              <p class="detail">Weekend build sprints, prototyping sessions, and open workshop hours with the hardware bench and dev tools. Show up with an idea, leave with a v1.</p>
+            </div>
+            <div class="lab-actions">
+              <a class="lab-link" href="#/events" data-route="events">See Build Lab events →</a>
+              <span class="stamp">MAKE →</span>
+            </div>
+          </div>
+          <div class="lab-card" style="min-height:340px;">
+            <div>
+              <span class="code mono">LAB / 02</span>
+              <h3>Think Lab</h3>
+              <p class="cmd mono">Have an opinion.</p>
+              <p class="detail">Mentorship, research discussions, and 1:1 feedback sessions. Bring a half-formed argument and leave with a sharper one — preferably a controversial one.</p>
+            </div>
+            <div class="lab-actions">
+              <a class="lab-link" href="#/events" data-route="events">See Think Lab events →</a>
+              <span class="stamp">preferably controversial</span>
+            </div>
+          </div>
+          <div class="lab-card" style="min-height:340px;">
+            <div>
+              <span class="code mono">LAB / 03</span>
+              <h3>Network Lab</h3>
+              <p class="cmd mono">Meet people.</p>
+              <p class="detail">Demo nights, founder dinners, and industry partnerships. The useful kind of networking — the kind where you actually stay in touch.</p>
+            </div>
+            <div class="lab-actions">
+              <a class="lab-link" href="#/events" data-route="events">See Network Lab events →</a>
+              <span class="stamp">the useful kind</span>
+            </div>
+          </div>
+          <div class="lab-card" style="min-height:340px;">
+            <div>
+              <span class="code mono">LAB / 04</span>
+              <h3>After Hours</h3>
+              <p class="cmd mono">Touch grass. 😂</p>
+              <p class="detail">Informal hangouts, game nights, and the community that makes the other three labs worth showing up for. Occasionally, we go outside.</p>
+            </div>
+            <div class="lab-actions">
+              <a class="lab-link" href="#/events" data-route="events">See After Hours events →</a>
+              <span class="stamp">occasionally</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="join">
+      <div class="wrap">
+        <div class="sec-head center">
+          <span class="num mono">NEXT STEP</span>
+          <h2>Find Your Lab</h2>
+          <p>Check what's actually on the calendar this month.</p>
+        </div>
+        <a class="rsvp-btn" href="#/events" data-route="events" style="background:var(--ink); color:var(--paper);">VIEW EVENTS →</a>
+      </div>
+    </section>
+
+</section>
+<section class="route" id="route-projects" data-path="/projects" data-title="Projects">
+
+    <section class="page-hero">
+      <div class="wrap">
+        <div class="breadcrumb"><a href="#/" data-route="home">Home</a> / Projects</div>
+        <h1>Built Here</h1>
+        <span class="hero-note hand">no results yet, some of the time</span>
+        <p class="lede">This wall is just getting started — nothing shipped yet, but this is where it'll live once it does.</p>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="card-grid">
+          <div class="coming-soon-card">
+            <span class="tag mono">COMING SOON</span>
+            <h3>Member Project</h3>
+            <p>This spot's open. Member-built projects will show up here as they ship.</p>
+          </div>
+          <div class="coming-soon-card">
+            <span class="tag mono">COMING SOON</span>
+            <h3>Member Project</h3>
+            <p>This spot's open. Member-built projects will show up here as they ship.</p>
+          </div>
+          <div class="coming-soon-card">
+            <span class="tag mono">COMING SOON</span>
+            <h3>Member Project</h3>
+            <p>This spot's open. Member-built projects will show up here as they ship.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="join">
+      <div class="wrap">
+        <div class="sec-head center">
+          <span class="num mono">YOUR TURN</span>
+          <h2>Add Yours To The Wall</h2>
+        </div>
+        <a class="rsvp-btn" href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=HR0ojU2c90uxbgMtFd6fbIhHjy7i2rpHt7VcaeT3yedUMkQwTTU4TkpUNFczMVQzS0cwUUVaWEw0WC4u&route=shorturl&b2b=true" target="_blank" rel="noopener" style="background:var(--ink); color:var(--paper);">START BUILDING →</a>
+      </div>
+    </section>
+
+</section>
+<section class="route" id="route-team" data-path="/team" data-title="Team">
+
+    <section class="page-hero">
+      <div class="wrap">
+        <div class="breadcrumb"><a href="#/" data-route="home">Home</a> / Team</div>
+        <h1>Who Runs This</h1>
+        <span class="hero-note hand">mostly figuring it out live</span>
+        <p class="lede">Our org chart — Executive Board and Officer seats. Most are still open. If one fits you, apply below.</p>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <span class="section-label">EXECUTIVE BOARD</span>
+        <div class="profile-grid">
+          <div class="profile-card">
+            <div class="profile-photo lead">
+              <span class="profile-tag">OPEN POSITION</span>
+              <span class="abbr">P</span>
+            </div>
+            <div class="profile-body">
+              <h3>Name TBD</h3>
+              <div class="profile-role">President</div>
+              <div class="profile-links">
+                <a href="mailto:president@cometfoundry.com">president@cometfoundry.com</a>
+                <a href="javascript:void(0)" class="linkedin-placeholder">Add LinkedIn →</a>
+              </div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="profile-photo lead">
+              <span class="profile-tag">OPEN POSITION</span>
+              <span class="abbr">VP</span>
+            </div>
+            <div class="profile-body">
+              <h3>Name TBD</h3>
+              <div class="profile-role">Vice President</div>
+              <div class="profile-links">
+                <a href="mailto:vp@cometfoundry.com">vp@cometfoundry.com</a>
+                <a href="javascript:void(0)" class="linkedin-placeholder">Add LinkedIn →</a>
+              </div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="profile-photo lead">
+              <span class="profile-tag">OPEN POSITION</span>
+              <span class="abbr">S</span>
+            </div>
+            <div class="profile-body">
+              <h3>Name TBD</h3>
+              <div class="profile-role">Secretary</div>
+              <div class="profile-links">
+                <a href="mailto:secretary@cometfoundry.com">secretary@cometfoundry.com</a>
+                <a href="javascript:void(0)" class="linkedin-placeholder">Add LinkedIn →</a>
+              </div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="profile-photo lead">
+              <span class="profile-tag">OPEN POSITION</span>
+              <span class="abbr">T</span>
+            </div>
+            <div class="profile-body">
+              <h3>Name TBD</h3>
+              <div class="profile-role">Treasurer</div>
+              <div class="profile-links">
+                <a href="mailto:treasurer@cometfoundry.com">treasurer@cometfoundry.com</a>
+                <a href="javascript:void(0)" class="linkedin-placeholder">Add LinkedIn →</a>
+              </div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="profile-photo lead">
+              <span class="profile-tag">OPEN POSITION</span>
+              <span class="abbr">MS</span>
+            </div>
+            <div class="profile-body">
+              <h3>Name TBD</h3>
+              <div class="profile-role">Marketing Strategist</div>
+              <div class="profile-links">
+                <a href="mailto:marketing@cometfoundry.com">marketing@cometfoundry.com</a>
+                <a href="javascript:void(0)" class="linkedin-placeholder">Add LinkedIn →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <span class="section-label">OFFICERS</span>
+        <div class="profile-grid">
+          <div class="profile-card">
+            <div class="profile-photo">
+              <span class="profile-tag">OPEN POSITION</span>
+              <span class="abbr">IO</span>
+            </div>
+            <div class="profile-body">
+              <h3>Name TBD</h3>
+              <div class="profile-role">Innovation Officer</div>
+              <div class="profile-links">
+                <a href="mailto:innovation@cometfoundry.com">innovation@cometfoundry.com</a>
+                <a href="javascript:void(0)" class="linkedin-placeholder">Add LinkedIn →</a>
+              </div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="profile-photo">
+              <span class="profile-tag">OPEN POSITION</span>
+              <span class="abbr">TO</span>
+            </div>
+            <div class="profile-body">
+              <h3>Name TBD</h3>
+              <div class="profile-role">Technology Officer</div>
+              <div class="profile-links">
+                <a href="mailto:tech@cometfoundry.com">tech@cometfoundry.com</a>
+                <a href="javascript:void(0)" class="linkedin-placeholder">Add LinkedIn →</a>
+              </div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="profile-photo">
+              <span class="profile-tag">OPEN POSITION</span>
+              <span class="abbr">EO</span>
+            </div>
+            <div class="profile-body">
+              <h3>Name TBD</h3>
+              <div class="profile-role">Events Officer — Seat 1 of 3</div>
+              <div class="profile-links">
+                <a href="mailto:events1@cometfoundry.com">events1@cometfoundry.com</a>
+                <a href="javascript:void(0)" class="linkedin-placeholder">Add LinkedIn →</a>
+              </div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="profile-photo">
+              <span class="profile-tag">OPEN POSITION</span>
+              <span class="abbr">EO</span>
+            </div>
+            <div class="profile-body">
+              <h3>Name TBD</h3>
+              <div class="profile-role">Events Officer — Seat 2 of 3</div>
+              <div class="profile-links">
+                <a href="mailto:events2@cometfoundry.com">events2@cometfoundry.com</a>
+                <a href="javascript:void(0)" class="linkedin-placeholder">Add LinkedIn →</a>
+              </div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="profile-photo">
+              <span class="profile-tag">OPEN POSITION</span>
+              <span class="abbr">EO</span>
+            </div>
+            <div class="profile-body">
+              <h3>Name TBD</h3>
+              <div class="profile-role">Events Officer — Seat 3 of 3</div>
+              <div class="profile-links">
+                <a href="mailto:events3@cometfoundry.com">events3@cometfoundry.com</a>
+                <a href="javascript:void(0)" class="linkedin-placeholder">Add LinkedIn →</a>
+              </div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="profile-photo">
+              <span class="profile-tag">OPEN POSITION</span>
+              <span class="abbr">PRO</span>
+            </div>
+            <div class="profile-body">
+              <h3>Name TBD</h3>
+              <div class="profile-role">Public Relations Officer</div>
+              <div class="profile-links">
+                <a href="mailto:pr@cometfoundry.com">pr@cometfoundry.com</a>
+                <a href="javascript:void(0)" class="linkedin-placeholder">Add LinkedIn →</a>
+              </div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="profile-photo">
+              <span class="profile-tag">OPEN POSITION</span>
+              <span class="abbr">PO</span>
+            </div>
+            <div class="profile-body">
+              <h3>Name TBD</h3>
+              <div class="profile-role">Partnerships Officer — Seat 1 of 2</div>
+              <div class="profile-links">
+                <a href="mailto:partnerships1@cometfoundry.com">partnerships1@cometfoundry.com</a>
+                <a href="javascript:void(0)" class="linkedin-placeholder">Add LinkedIn →</a>
+              </div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="profile-photo">
+              <span class="profile-tag">OPEN POSITION</span>
+              <span class="abbr">PO</span>
+            </div>
+            <div class="profile-body">
+              <h3>Name TBD</h3>
+              <div class="profile-role">Partnerships Officer — Seat 2 of 2</div>
+              <div class="profile-links">
+                <a href="mailto:partnerships2@cometfoundry.com">partnerships2@cometfoundry.com</a>
+                <a href="javascript:void(0)" class="linkedin-placeholder">Add LinkedIn →</a>
+              </div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="profile-photo">
+              <span class="profile-tag">OPEN POSITION</span>
+              <span class="abbr">CEO</span>
+            </div>
+            <div class="profile-body">
+              <h3>Name TBD</h3>
+              <div class="profile-role">Community Engagement Officer</div>
+              <div class="profile-links">
+                <a href="mailto:community@cometfoundry.com">community@cometfoundry.com</a>
+                <a href="javascript:void(0)" class="linkedin-placeholder">Add LinkedIn →</a>
+              </div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="profile-photo">
+              <span class="profile-tag">OPEN POSITION</span>
+              <span class="abbr">SMO</span>
+            </div>
+            <div class="profile-body">
+              <h3>Name TBD</h3>
+              <div class="profile-role">Social Media Officer — Seat 1 of 2</div>
+              <div class="profile-links">
+                <a href="mailto:social1@cometfoundry.com">social1@cometfoundry.com</a>
+                <a href="javascript:void(0)" class="linkedin-placeholder">Add LinkedIn →</a>
+              </div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="profile-photo">
+              <span class="profile-tag">OPEN POSITION</span>
+              <span class="abbr">SMO</span>
+            </div>
+            <div class="profile-body">
+              <h3>Name TBD</h3>
+              <div class="profile-role">Social Media Officer — Seat 2 of 2</div>
+              <div class="profile-links">
+                <a href="mailto:social2@cometfoundry.com">social2@cometfoundry.com</a>
+                <a href="javascript:void(0)" class="linkedin-placeholder">Add LinkedIn →</a>
+              </div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="profile-photo">
+              <span class="profile-tag">OPEN POSITION</span>
+              <span class="abbr">DO</span>
+            </div>
+            <div class="profile-body">
+              <h3>Name TBD</h3>
+              <div class="profile-role">Design Officer</div>
+              <div class="profile-links">
+                <a href="mailto:design@cometfoundry.com">design@cometfoundry.com</a>
+                <a href="javascript:void(0)" class="linkedin-placeholder">Add LinkedIn →</a>
+              </div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <div class="profile-photo">
+              <span class="profile-tag">OPEN POSITION</span>
+              <span class="abbr">OO</span>
+            </div>
+            <div class="profile-body">
+              <h3>Name TBD</h3>
+              <div class="profile-role">Outreach Officer</div>
+              <div class="profile-links">
+                <a href="mailto:outreach@cometfoundry.com">outreach@cometfoundry.com</a>
+                <a href="javascript:void(0)" class="linkedin-placeholder">Add LinkedIn →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="join">
+      <div class="wrap">
+        <div class="sec-head center">
+          <span class="num mono">JOIN THEM</span>
+          <h2>Be On This Page Next</h2>
+        </div>
+        <a class="rsvp-btn" href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=HR0ojU2c90uxbgMtFd6fbIhHjy7i2rpHt7VcaeT3yedUQVE2MU1DUE80TkpGTEpURDhUUFBXQUo0MS4u&route=shorturl" target="_blank" rel="noopener" style="background:var(--ink); color:var(--paper);">APPLY →</a>
+      </div>
+    </section>
+
+</section>
+<section class="route" id="route-partners" data-path="/partners" data-title="Partners">
+
+    <section class="page-hero">
+      <div class="wrap">
+        <div class="breadcrumb"><a href="#/" data-route="home">Home</a> / Partners</div>
+        <h1>Who Backs The Lab</h1>
+        <span class="hero-note hand">the useful kind, again</span>
+        <p class="lede">Industry partners who fund experiments, send mentors, and show up for demo nights.</p>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="card-grid">
+          <div class="partner-card">
+            <div class="card-media "></div>
+            <div class="card-body">
+              <h3>Resilient Privacy</h3>
+              <p>Comet Foundry's founding Industry Partner — advisory only, non-voting. Coordinates mentorship and internship referrals for opted-in members.</p>
+              <a class="card-link" href="https://www.resilientprivacy.com" target="_blank" rel="noopener">Visit site →</a>
+            </div>
+          </div>
+          <div class="coming-soon-card">
+            <span class="tag mono">COMING SOON</span>
+            <h3>Partner</h3>
+            <p>This spot's open. New industry partners will show up here as they join.</p>
+          </div>
+          <div class="coming-soon-card">
+            <span class="tag mono">COMING SOON</span>
+            <h3>Partner</h3>
+            <p>This spot's open. New industry partners will show up here as they join.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="join">
+      <div class="wrap">
+        <div class="sec-head center">
+          <span class="num mono">FOR COMPANIES</span>
+          <h2>Become A Partner</h2>
+          <p>Fund an experiment, send a mentor, or just come to a demo night and see what's brewing.</p>
+        </div>
+        <a class="rsvp-btn" href="mailto:partners@cometfoundry.com" style="background:var(--ink); color:var(--paper);">GET IN TOUCH →</a>
+      </div>
+    </section>
+
+</section>
+<section class="route" id="route-events" data-path="/events" data-title="Events">
+
+    <section class="page-hero">
+      <div class="wrap">
+        <div class="breadcrumb"><a href="#/" data-route="home">Home</a> / Events</div>
+        <h1>What's Happening</h1>
+        <span class="hero-note hand">you should probably come to this</span>
+        <p class="lede">Build sprints, critique nights, demo nights, and the occasional excuse to touch grass.</p>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="cal-card">
+          <div class="cal-toolbar">
+            <button class="cal-btn" id="cal-today">Today</button>
+            <div class="cal-nav">
+              <button class="cal-arrow" id="cal-prev" aria-label="Previous month">←</button>
+              <button class="cal-arrow" id="cal-next" aria-label="Next month">→</button>
+            </div>
+            <span class="cal-month-label" id="cal-month-label">August 2026</span>
+            <span class="cal-view">Month</span>
+          </div>
+          <div class="cal-grid" id="cal-grid"></div>
+          <div class="cal-footer">
+            <div class="who">
+              <b>info@cometfoundry.com</b>
+              <div class="tz">Events shown in time zone: (GMT-05:00) Central Time — Chicago</div>
+              <a class="outlook-link" id="cal-outlook-link" href="javascript:void(0)" target="_blank" rel="noopener">Add to Outlook Calendar →</a>
+            </div>
+            <div class="cal-provider"><span class="sq"><span></span><span></span><span></span><span></span></span> Microsoft Outlook</div>
+          </div>
+        </div>
+
+        <div class="cal-cta-wrap">
+          <button class="cal-cta" id="add-cal-btn">ADD IT TO YOUR CALENDAR &lt;3</button>
+          <div class="cal-cta-note">Downloads Kickoff Night as a .ics — works with Outlook, Google, and Apple Calendar.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="event-card">
+          <span class="event-annot hand">next up</span>
+          <div class="event-left">
+            <div class="event-date">AUG 24 / 7:00 PM</div>
+            <h3>Foundry Kickoff Night</h3>
+            <p>First open house of the semester. Tour the space, pitch a half-formed idea, find someone to build it with.</p>
+          </div>
+          <div class="event-right">
+            <div class="row"><span>STATUS</span><b>EXPERIMENT IN PROGRESS</b></div>
+            <div class="row"><span>LOCATION</span><b>UT Dallas — Lab 01</b></div>
+            <a class="rsvp-btn" href="#/events/kickoff-night" data-route="event-detail">RSVP →</a>
+          </div>
+        </div>
+
+        <div class="sec-head" style="margin-top:60px; margin-bottom:0;">
+          <span class="num">UPCOMING</span>
+          <h2 style="font-size:clamp(24px,4vw,32px);">More On The Calendar</h2>
+        </div>
+        <div>
+        <a class="event-list-row" href="javascript:void(0)">
+          <span class="elr-date mono">SEP 03</span>
+          <div>
+            <h4>Build Sprint: Weekend v1</h4>
+            <p>Show up Friday with an idea, leave Sunday with a working prototype.</p>
+          </div>
+          <span class="elr-arrow">VIEW →</span>
+        </a>
+        <a class="event-list-row" href="javascript:void(0)">
+          <span class="elr-date mono">SEP 10</span>
+          <div>
+            <h4>Think Lab: Critique Night</h4>
+            <p>Bring an idea, get it stress-tested by people who won't just say it's great.</p>
+          </div>
+          <span class="elr-arrow">VIEW →</span>
+        </a>
+        <a class="event-list-row" href="javascript:void(0)">
+          <span class="elr-date mono">SEP 18</span>
+          <div>
+            <h4>Network Lab: Founder Dinner</h4>
+            <p>Small-group dinner with partner-side founders. The useful kind of networking.</p>
+          </div>
+          <span class="elr-arrow">VIEW →</span>
+        </a>
+        </div>
+        <button id="past-toggle" class="past-toggle mono">SHOW PAST EVENTS →</button>
+        <div id="past-events">
+        <a class="event-list-row" href="javascript:void(0)">
+          <span class="elr-date mono">MAY 02</span>
+          <div>
+            <h4>Spring Demo Night</h4>
+            <p>Members showed off a semester's worth of experiments.</p>
+          </div>
+          <span class="elr-arrow">VIEW →</span>
+        </a>
+        <a class="event-list-row" href="javascript:void(0)">
+          <span class="elr-date mono">APR 11</span>
+          <div>
+            <h4>Build Sprint: Hardware Weekend</h4>
+            <p>First time opening the hardware bench to non-members.</p>
+          </div>
+          <span class="elr-arrow">VIEW →</span>
+        </a>
+        </div>
+      </div>
+    </section>
+
+</section>
+<section class="route" id="route-event-detail" data-path="/events/kickoff-night" data-title="Kickoff Night">
+
+    <section class="page-hero">
+      <div class="wrap">
+        <div class="breadcrumb"><a href="#/" data-route="home">Home</a> / <a href="#/events" data-route="events">Events</a> / Kickoff Night</div>
+        <h1>Foundry Kickoff Night</h1>
+        <span class="hero-note hand">you should probably come to this</span>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap about-grid">
+        <div class="about-text">
+          <p>First open house of the semester. Tour the space, pitch a half-formed idea out loud, and find someone to build it with. No pitch deck required — a napkin sketch is plenty.</p>
+          <p>Expect a short intro to the four labs, free food, and enough people in the room that you'll leave with at least one new collaborator.</p>
+        </div>
+        <div class="doc-card">
+          <span class="hand">the details</span>
+          <h3>Event Info</h3>
+          <ul class="mono">
+            <li><span>Date</span><span class="v">AUG 24, 2026</span></li>
+            <li><span>Time</span><span class="v">7:00 PM</span></li>
+            <li><span>Location</span><span class="v">UT Dallas — Lab 01</span></li>
+            <li><span>Status</span><span class="v">EXPERIMENT IN PROGRESS</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="join">
+      <div class="wrap">
+        <div class="sec-head center">
+          <span class="num mono">SAVE YOUR SPOT</span>
+          <h2>RSVP</h2>
+        </div>
+        <a class="rsvp-btn" href="#/apply" data-route="apply" style="background:var(--ink); color:var(--paper);">RSVP →</a>
+      </div>
+    </section>
+
+</section>
+<section class="route" id="route-blog" data-path="/blog" data-title="Blog">
+
+    <section class="page-hero">
+      <div class="wrap">
+        <div class="breadcrumb"><a href="#/" data-route="home">Home</a> / Blog</div>
+        <h1>Notes From The Lab</h1>
+        <span class="hero-note hand">under construction lol</span>
+        <p class="lede">Updates, postmortems, and the occasional controversial opinion from Think Lab.</p>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="card-grid">
+          <div class="coming-soon-card">
+            <span class="tag mono">COMING SOON</span>
+            <h3>Post</h3>
+            <p>This spot's open. Notes and updates from the lab will show up here as they're written.</p>
+          </div>
+          <div class="coming-soon-card">
+            <span class="tag mono">COMING SOON</span>
+            <h3>Post</h3>
+            <p>This spot's open. Notes and updates from the lab will show up here as they're written.</p>
+          </div>
+          <div class="coming-soon-card">
+            <span class="tag mono">COMING SOON</span>
+            <h3>Post</h3>
+            <p>This spot's open. Notes and updates from the lab will show up here as they're written.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+</section>
+<section class="route" id="route-apply" data-path="/apply" data-title="Apply">
+
+    <section class="page-hero">
+      <div class="wrap">
+        <div class="breadcrumb"><a href="#/" data-route="home">Home</a> / Apply</div>
+        <h1>Apply</h1>
+        <span class="hero-note hand">ideas over résumés</span>
+        <p class="lede">Tell us what you want to build. That's most of the application.</p>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <form class="apply-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='SUBMITTED ✓';">
+          <div>
+            <label for="name">Name</label>
+            <input type="text" id="name" required>
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" required>
+          </div>
+          <div>
+            <label for="year">Major / Year</label>
+            <input type="text" id="year" placeholder="e.g. CS, Sophomore">
+          </div>
+          <div>
+            <label for="build">What do you want to build?</label>
+            <textarea id="build" placeholder="A rough idea is plenty."></textarea>
+          </div>
+          <div>
+            <label for="heard">How'd you hear about us?</label>
+            <select id="heard">
+              <option>A friend</option>
+              <option>An event</option>
+              <option>Social media</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <button type="submit">SUBMIT APPLICATION →</button>
+          <span class="apply-note">We read every application ourselves. No perfect ideas required.</span>
+        </form>
+      </div>
+    </section>
+
+</section>
+<section class="route" id="route-privacy-policy" data-path="/privacy-policy" data-title="Privacy Policy">
+
+    <section class="page-hero">
+      <div class="wrap">
+        <div class="breadcrumb"><a href="#/" data-route="home">Home</a> / Privacy Policy</div>
+        <h1>Privacy Policy</h1>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="legal-body">
+          <div class="legal-effective">EFFECTIVE DATE: AUGUST 1, 2026 &nbsp;|&nbsp; LAST UPDATED: AUGUST 1, 2026</div>
+
+          <h2>1. Introduction</h2>
+          <p>Comet Foundry ("Comet Foundry," "we," "us," or "our") is a student-led innovation, entrepreneurship, and technology organization registered as a student organization at the University of Texas at Dallas ("UT Dallas") through its Student Organization Center ("SOC"). This Privacy Policy ("Policy") describes how we collect, use, disclose, retain, and protect information in connection with cometfoundry.com (the "Site") and our related programs and communications (collectively, the "Services").</p>
+          <p>By accessing or using the Services, you acknowledge that you have read and understood this Policy. If you do not agree with any part of this Policy, you should discontinue use of the Services.</p>
+
+          <h2>2. No Independent Verification of Student Status</h2>
+          <p>Comet Foundry does not request, receive, or verify a member's enrollment status, academic records, or other education records from UT Dallas or the SOC. Eligibility for officer or voting membership roles is confirmed solely through self-attestation by the individual, consistent with the Family Educational Rights and Privacy Act (FERPA), which prohibits Comet Foundry from accessing such records without the student's direct, independent authorization.</p>
+
+          <h2>3. Information We Collect</h2>
+          <p><strong>3.1 Information You Provide Directly</strong></p>
+          <ul>
+            <li>Name, email address, and phone number</li>
+            <li>Self-reported academic information (e.g., major, classification) submitted voluntarily in membership or officer applications</li>
+            <li>Event registration details, including RSVP responses and accessibility accommodation requests</li>
+            <li>Content of messages submitted through contact, application, or feedback forms</li>
+            <li>Payment or donation information where applicable; such transactions are processed by a third-party payment processor, and Comet Foundry does not collect or store full payment card details</li>
+          </ul>
+          <p><strong>3.2 Information Collected Automatically</strong></p>
+          <p>As of the Effective Date, the Site does not use analytics or tracking software. If Comet Foundry adopts an analytics platform in the future, it will use Google Analytics and update this Policy accordingly, including opt-out information.</p>
+          <p><strong>3.3 Information from Third Parties</strong></p>
+          <p>Publicly available professional information (for example, from LinkedIn) that a member voluntarily elects to include in an organizational directory or mentorship profile.</p>
+
+          <h2>4. How We Use Information</h2>
+          <ul>
+            <li>To administer membership records, officer elections, and organizational operations</li>
+            <li>To communicate about events, workshops, mentorship, and internship opportunities</li>
+            <li>To coordinate mentorship and internship-pipeline activities with our founding Industry Partner, Resilient Privacy Inc., limited strictly to members who affirmatively opt in</li>
+            <li>To respond to inquiries and maintain the security of the Site</li>
+          </ul>
+          <p>Comet Foundry does not use personal information for automated decision-making with legal or similarly significant effects.</p>
+
+          <h2>5. Disclosure of Information</h2>
+          <p>Comet Foundry does not sell personal information. Information may be disclosed only as follows:</p>
+          <table class="legal-table">
+            <thead><tr><th>Recipient</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td>Resilient Privacy Inc. (Industry Partner)</td><td>Mentorship coordination and internship referrals, limited to opted-in members</td></tr>
+              <tr><td>Operational service providers</td><td>Email delivery, form processing, and hosting, under confidentiality obligations</td></tr>
+              <tr><td>Legal authorities</td><td>Where required by law, subpoena, or court order, or to protect the rights or safety of Comet Foundry, its members, or others</td></tr>
+            </tbody>
+          </table>
+          <p>Resilient Privacy Inc. holds a non-voting, advisory role within Comet Foundry's governance structure and has no standing access to member information beyond programs a member has voluntarily joined.</p>
+
+          <h2>6. Data Retention</h2>
+          <p>Information is retained only as long as reasonably necessary for the purposes described in this Policy or as required by law. Information relating to inactive members is archived or deleted within a reasonable period following the end of active involvement.</p>
+
+          <h2>7. Data Security</h2>
+          <p>Comet Foundry implements reasonable administrative and technical safeguards to protect information against unauthorized access, use, or disclosure. No method of electronic storage or transmission is completely secure, and Comet Foundry cannot guarantee absolute security.</p>
+
+          <h2>8. Your Rights and Choices</h2>
+          <ul>
+            <li>Request access to, correction of, or deletion of your personal information</li>
+            <li>Opt out of non-essential communications at any time</li>
+            <li>Withdraw consent to having your information shared with Resilient Privacy Inc. without affecting your underlying membership</li>
+          </ul>
+          <p>Requests may be submitted to security@cometfoundry.com.</p>
+
+          <h2>9. Children's Privacy</h2>
+          <p>The Services are not directed at children under 13, and Comet Foundry does not knowingly collect information from children under 13.</p>
+
+          <h2>10. Third-Party Links</h2>
+          <p>The Site may link to third-party websites. Comet Foundry is not responsible for the privacy practices of any linked third-party site.</p>
+
+          <h2>11. Changes to This Policy</h2>
+          <p>Comet Foundry may revise this Policy from time to time. Material changes will be posted on this page with a revised "Last Updated" date. Continued use of the Services constitutes acceptance of the revised Policy.</p>
+
+          <div class="legal-contact">
+            Comet Foundry<br>The University of Texas at Dallas<br>security@cometfoundry.com
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+</section>
+<section class="route" id="route-terms-of-use" data-path="/terms-of-use" data-title="Terms of Use">
+
+    <section class="page-hero">
+      <div class="wrap">
+        <div class="breadcrumb"><a href="#/" data-route="home">Home</a> / Terms of Use</div>
+        <h1>Terms of Use</h1>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="legal-body">
+          <div class="legal-effective">EFFECTIVE DATE: AUGUST 1, 2026 &nbsp;|&nbsp; LAST UPDATED: AUGUST 1, 2026</div>
+
+          <h2>1. Acceptance of Terms</h2>
+          <p>These Terms of Use ("Terms") govern access to and use of cometfoundry.com (the "Site"), operated by Comet Foundry, a registered student organization at the University of Texas at Dallas ("UT Dallas"). By accessing or using the Site, you agree to be bound by these Terms. If you do not agree, do not access or use the Site.</p>
+
+          <h2>2. About Comet Foundry</h2>
+          <p>Comet Foundry is a student-led innovation, entrepreneurship, and technology organization registered through the UT Dallas Student Organization Center (SOC). Comet Foundry maintains full independence in its programming and governance decisions. Resilient Privacy Inc. serves as Comet Foundry's founding Industry Partner in a non-voting, advisory capacity only and does not direct or control Comet Foundry's decisions.</p>
+
+          <h2>3. Eligibility</h2>
+          <p>The Site is publicly accessible. Membership, officer, and voting roles are governed exclusively by the Comet Foundry Constitution and Bylaws and are reserved for currently enrolled UT Dallas students on the basis of self-attestation. Consistent with FERPA, Comet Foundry does not verify enrollment status through UT Dallas or SOC records.</p>
+
+          <h2>4. Acceptable Use</h2>
+          <ul>
+            <li>Provide accurate information in any form submitted through the Site</li>
+            <li>Use the Site only for lawful purposes</li>
+            <li>Not disrupt, interfere with, or attempt unauthorized access to the Site</li>
+            <li>Not scrape, copy, or redistribute Site content without written permission</li>
+          </ul>
+
+          <h2>5. Intellectual Property</h2>
+          <p>The Comet Foundry name, logo, and Site content are the property of Comet Foundry or its licensors and may not be reproduced or used commercially without prior written consent.</p>
+
+          <h2>6. User Submissions</h2>
+          <p>Content you submit to the Site grants Comet Foundry a limited, non-exclusive license to use that content for organizational operations. You retain ownership of your submissions.</p>
+
+          <h2>7. No Guarantee of Outcomes</h2>
+          <p>Comet Foundry does not guarantee admission to any program, internship placement, mentorship match, funding, or any specific outcome from participation in its Services.</p>
+
+          <h2>8. Assumption of Risk</h2>
+          <p>Participation in Comet Foundry events, workshops, and activities is voluntary. Each participant assumes full responsibility for their own participation and safety, and agrees to follow all applicable UT Dallas policies and event guidelines.</p>
+
+          <h2>9. Disclaimers</h2>
+          <p>The Site and its content are provided "as is" and "as available," without warranties of any kind, express or implied, including warranties of merchantability, fitness for a particular purpose, and non-infringement. Comet Foundry does not warrant that the Site will be uninterrupted, error-free, or secure.</p>
+
+          <h2>10. Limitation of Liability</h2>
+          <p>To the fullest extent permitted by law, Comet Foundry, its officers, members, volunteers, and Resilient Privacy Inc. (collectively, the "Comet Foundry Parties") shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of data, revenue, or goodwill, arising out of or related to use of the Site or participation in Comet Foundry activities, even if advised of the possibility of such damages.</p>
+
+          <h2>11. Indemnification</h2>
+          <p>You agree to indemnify, defend, and hold harmless the Comet Foundry Parties from and against any claims, liabilities, damages, losses, and expenses, including reasonable attorneys' fees, arising out of or related to your use of the Site, your violation of these Terms, or your participation in Comet Foundry activities.</p>
+
+          <h2>12. Organizational Independence</h2>
+          <p>Comet Foundry is governed by its own Constitution and Bylaws, with all governance and voting authority resting exclusively with its enrolled-student officers. Nothing on the Site constitutes an endorsement by UT Dallas beyond Comet Foundry's official SOC registration status.</p>
+
+          <h2>13. Termination</h2>
+          <p>Comet Foundry reserves the right to suspend or restrict access to the Site for any user who violates these Terms.</p>
+
+          <h2>14. Governing Law</h2>
+          <p>These Terms are governed by the laws of the State of Texas, without regard to conflict-of-laws principles.</p>
+
+          <h2>15. Severability</h2>
+          <p>If any provision of these Terms is held unenforceable, the remaining provisions will remain in full force and effect.</p>
+
+          <h2>16. Changes to These Terms</h2>
+          <p>Comet Foundry may revise these Terms from time to time. Continued use of the Site following posted changes constitutes acceptance of the revised Terms.</p>
+
+          <div class="legal-contact">
+            Comet Foundry<br>The University of Texas at Dallas<br>security@cometfoundry.com
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+</section>
+
+    <footer>
+      <div class="wrap">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <h4>Comet Foundry</h4>
+            <p>A hacker house at UTD. No perfect ideas. Just interesting ones.</p>
+          </div>
+          <div class="footer-links">
+            <div>
+              <h5>Explore</h5>
+              <ul>
+                <li><a href="#/about" data-route="about">About</a></li>
+                <li><a href="#/programs" data-route="programs">Programs</a></li>
+                <li><a href="#/projects" data-route="projects">Projects</a></li>
+                <li><a href="#/team" data-route="team">Team</a></li>
+                <li><a href="#/partners" data-route="partners">Partners</a></li>
+                <li><a href="#/events" data-route="events">Events</a></li>
+                <li><a href="#/blog" data-route="blog">Blog</a></li>
+              </ul>
+            </div>
+            <div>
+              <h5>Contact</h5>
+              <ul>
+                <li><a href="mailto:info@cometfoundry.com">info@cometfoundry.com</a></li>
+                <li><a href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=HR0ojU2c90uxbgMtFd6fbIhHjy7i2rpHt7VcaeT3yedUMkQwTTU4TkpUNFczMVQzS0cwUUVaWEw0WC4u&route=shorturl&b2b=true" target="_blank" rel="noopener">Apply →</a></li>
+              </ul>
+              <div class="social-icons">
+                <a href="https://www.linkedin.com/company/cometfoundry/" target="_blank" rel="noopener" aria-label="Comet Foundry on LinkedIn">
+                  <svg viewBox="0 0 24 24"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4v15h-4V8zm7.5 0h3.8v2.05h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V23h-4v-6.9c0-1.65-.03-3.77-2.3-3.77-2.3 0-2.65 1.8-2.65 3.65V23h-4V8z"/></svg>
+                </a>
+                <a href="https://www.instagram.com/cometfoundry" target="_blank" rel="noopener" aria-label="Comet Foundry on Instagram">
+                  <svg viewBox="0 0 24 24"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.31-1.46.72-2.13 1.38C1.35 2.68.94 3.35.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.31.79.72 1.46 1.38 2.13.67.66 1.34 1.07 2.13 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.31 1.46-.72 2.13-1.38.66-.67 1.07-1.34 1.38-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.31-.79-.72-1.46-1.38-2.13C20.32 1.35 19.65.94 18.86.63c-.76-.3-1.64-.5-2.91-.56C14.67.01 14.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 18.16 12 6.16 6.16 0 0 0 12 5.84zM12 16a4 4 0 1 1 4-4 4 4 0 0 1-4 4zm6.41-10.87a1.44 1.44 0 1 1-1.44-1.44 1.44 1.44 0 0 1 1.44 1.44z"/></svg>
+                </a>
+                <a href="https://discord.com/invite/Hdg8VBFUW" target="_blank" rel="noopener" aria-label="Comet Foundry on Discord">
+                  <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.099.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.076.076 0 0 0-.04.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.055c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.331c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.418 2.157-2.418 1.21 0 2.176 1.094 2.157 2.418 0 1.334-.955 2.419-2.157 2.419zm7.974 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.418 2.157-2.418 1.21 0 2.176 1.094 2.157 2.418 0 1.334-.946 2.419-2.157 2.419z"/></svg>
+                </a>
+              </div>
+            </div>
+            <div>
+              <h5>Legal</h5>
+              <ul>
+                <li><a href="#/privacy-policy" data-route="privacy-policy">Privacy Policy</a></li>
+                <li><a href="#/terms-of-use" data-route="terms-of-use">Terms of Use</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span class="mono">© 2026 Comet Foundry. All rights reserved.</span>
+          <span class="footer-easter">Built by humans — every em dash placed manually. :)</span>
+          <span class="mono fb-right">EST. 2026 / UT DALLAS</span>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <button id="bored-btn">I'M BORED →</button>
+  <div id="bored-popup">
+    <div class="result" id="bored-result">Build something.</div>
+    <span>tap again for another one</span>
+  </div>
+
+<script>
+
+// ---- Lab door ----
+const door = document.getElementById('door');
+const openBtn = document.getElementById('open-btn');
+const doorStatus = document.getElementById('door-status');
+const main = document.getElementById('main');
+
+openBtn.addEventListener('click', () => {
+  doorStatus.innerHTML = '<span class="dot"></span>LAB STATUS: OPEN ✓';
+  doorStatus.classList.add('open');
+  openBtn.textContent = 'OPENING...';
+  setTimeout(() => {
+    door.classList.add('open');
+  }, 350);
+});
+
+// ---- I'm bored button ----
+const ideas = [
+  'Build something.',
+  'Find a teammate.',
+  'Go to an event.',
+  'Start a stupid idea.',
+  'Ask someone smarter than you.',
+  'Touch grass.'
+];
+const boredBtn = document.getElementById('bored-btn');
+const boredPopup = document.getElementById('bored-popup');
+const boredResult = document.getElementById('bored-result');
+let lastIdea = -1;
+
+boredBtn.addEventListener('click', () => {
+  let i = Math.floor(Math.random() * ideas.length);
+  if (i === lastIdea) i = (i + 1) % ideas.length;
+  lastIdea = i;
+  boredResult.textContent = ideas[i];
+  boredPopup.classList.add('show');
+});
+
+document.addEventListener('click', (e) => {
+  if (!boredPopup.contains(e.target) && e.target !== boredBtn) {
+    boredPopup.classList.remove('show');
+  }
+});
+
+// ---- Mobile menu toggle ----
+const navToggle = document.getElementById('nav-toggle');
+const mobileMenu = document.getElementById('mobile-menu');
+if (navToggle && mobileMenu) {
+  navToggle.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    navToggle.textContent = open ? '✕' : '☰';
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+}
+
+// ---- Router (click-delegated, not hash-event dependent) ----
+const routes = document.querySelectorAll('.route');
+const routeTitles = {};
+routes.forEach(r => { routeTitles[r.id.replace('route-', '')] = r.getAttribute('data-title'); });
+
+function navigate(routeId, skipHash) {
+  const target = document.getElementById('route-' + routeId) || document.getElementById('route-home');
+  routes.forEach(r => r.classList.remove('active'));
+  target.classList.add('active');
+  document.title = (routeTitles[routeId] || 'Home') + ' — Comet Foundry';
+
+  document.querySelectorAll('[data-route]').forEach(a => a.classList.remove('active'));
+  document.querySelectorAll('[data-route="' + routeId + '"]').forEach(a => a.classList.add('active'));
+
+  try { window.scrollTo(0, 0); } catch (e) {}
+
+  if (mobileMenu) {
+    mobileMenu.classList.remove('open');
+    if (navToggle) { navToggle.textContent = '☰'; navToggle.setAttribute('aria-expanded', 'false'); }
+  }
+
+  if (!skipHash) {
+    try { history.replaceState(null, '', '#/' + (routeId === 'home' ? '' : routeId)); } catch (e) {}
+  }
+
+  const pastToggle = document.getElementById('past-toggle');
+  const pastEvents = document.getElementById('past-events');
+  if (pastToggle && pastEvents && !pastToggle.dataset.wired) {
+    pastToggle.dataset.wired = '1';
+    pastToggle.addEventListener('click', () => {
+      pastEvents.classList.toggle('show');
+      pastToggle.textContent = pastEvents.classList.contains('show') ? 'HIDE PAST EVENTS' : 'SHOW PAST EVENTS →';
+    });
+  }
+}
+
+// ---- Events calendar ----
+const CAL_EVENTS = [
+  { date: '2026-08-24', title: 'Foundry Kickoff Night', route: 'event-detail' },
+  { date: '2026-09-03', title: 'Build Sprint: Weekend v1' },
+  { date: '2026-09-10', title: 'Think Lab: Critique Night' },
+  { date: '2026-09-18', title: 'Network Lab: Founder Dinner' },
+  { date: '2026-05-02', title: 'Spring Demo Night' },
+  { date: '2026-04-11', title: 'Build Sprint: Hardware Weekend' }
+];
+
+(function initCalendar() {
+  const grid = document.getElementById('cal-grid');
+  if (!grid) return;
+  const monthLabel = document.getElementById('cal-month-label');
+  const today = new Date();
+  let viewYear = today.getFullYear();
+  let viewMonth = today.getMonth();
+
+  function render() {
+    grid.innerHTML = '';
+    ['SUN','MON','TUE','WED','THU','FRI','SAT'].forEach(d => {
+      const el = document.createElement('div');
+      el.className = 'cal-dow';
+      el.textContent = d;
+      grid.appendChild(el);
+    });
+
+    const firstOfMonth = new Date(viewYear, viewMonth, 1);
+    const startDow = firstOfMonth.getDay();
+    const gridStart = new Date(viewYear, viewMonth, 1 - startDow);
+
+    for (let i = 0; i < 42; i++) {
+      const cellDate = new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + i);
+      const cell = document.createElement('div');
+      cell.className = 'cal-cell';
+      if (cellDate.getMonth() !== viewMonth) cell.classList.add('muted');
+      if (cellDate.toDateString() === today.toDateString()) cell.classList.add('today');
+
+      const num = document.createElement('span');
+      num.className = 'date-num';
+      num.textContent = cellDate.getDate();
+      cell.appendChild(num);
+
+      const iso = cellDate.getFullYear() + '-' + String(cellDate.getMonth()+1).padStart(2,'0') + '-' + String(cellDate.getDate()).padStart(2,'0');
+      CAL_EVENTS.filter(e => e.date === iso).forEach(e => {
+        const pill = document.createElement('a');
+        pill.className = 'cal-pill';
+        pill.textContent = e.title;
+        pill.href = e.route ? '#/events/kickoff-night' : 'javascript:void(0)';
+        if (e.route) pill.setAttribute('data-route', e.route);
+        cell.appendChild(pill);
+      });
+
+      grid.appendChild(cell);
+    }
+    monthLabel.textContent = firstOfMonth.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+  }
+
+  document.getElementById('cal-today')?.addEventListener('click', () => { viewYear = today.getFullYear(); viewMonth = today.getMonth(); render(); });
+  document.getElementById('cal-prev')?.addEventListener('click', () => { viewMonth -= 1; if (viewMonth < 0) { viewMonth = 11; viewYear -= 1; } render(); });
+  document.getElementById('cal-next')?.addEventListener('click', () => { viewMonth += 1; if (viewMonth > 11) { viewMonth = 0; viewYear += 1; } render(); });
+
+  render();
+})();
+
+// ---- Add to calendar: Outlook deeplink + .ics download ----
+const outlookLink = document.getElementById('cal-outlook-link');
+if (outlookLink) {
+  const params = new URLSearchParams({
+    subject: 'Foundry Kickoff Night',
+    startdt: '2026-08-24T19:00:00',
+    enddt: '2026-08-24T21:00:00',
+    location: 'UT Dallas — Lab 01',
+    body: "First open house of the semester. Tour the space, pitch a half-formed idea, find someone to build it with."
+  });
+  outlookLink.href = 'https://outlook.office.com/calendar/0/deeplink/compose?' + params.toString();
+}
+
+document.getElementById('add-cal-btn')?.addEventListener('click', () => {
+  const ics = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Comet Foundry//Events//EN',
+    'BEGIN:VEVENT',
+    'UID:kickoff-night-2026@cometfoundry.com',
+    'DTSTART:20260824T190000',
+    'DTEND:20260824T210000',
+    'SUMMARY:Foundry Kickoff Night',
+    'LOCATION:UT Dallas — Lab 01',
+    'DESCRIPTION:First open house of the semester. Tour the space\, pitch a half-formed idea\, find someone to build it with.',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'foundry-kickoff-night.ics';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('[data-route]');
+  if (!link) return;
+  e.preventDefault();
+  navigate(link.getAttribute('data-route'));
+});
+
+navigate('home', true);
+
+</script>
+</body>
+</html>

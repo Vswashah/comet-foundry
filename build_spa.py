@@ -1,0 +1,396 @@
+import re
+import generate as g
+
+with open("styles.css") as f:
+    css = f.read()
+
+# Extra SPA-only styling: route visibility
+css += """
+.route{ display:none; }
+.route.active{ display:block; }
+main{ visibility:visible !important; }
+"""
+
+
+ROUTES = [
+    ("home", "/", "Home", g.home_body),
+    ("about", "/about", "About", g.about_body),
+    ("programs", "/programs", "Programs", g.programs_body),
+    ("projects", "/projects", "Projects", g.projects_body),
+    ("team", "/team", "Team", g.team_body),
+    ("partners", "/partners", "Partners", g.partners_body),
+    ("events", "/events", "Events", g.events_body),
+    ("event-detail", "/events/kickoff-night", "Kickoff Night", g.event_detail_body),
+    ("blog", "/blog", "Blog", g.blog_body),
+    ("apply", "/apply", "Apply", g.apply_body),
+    ("privacy-policy", "/privacy-policy", "Privacy Policy", g.privacy_policy_body),
+    ("terms-of-use", "/terms-of-use", "Terms of Use", g.terms_of_use_body),
+]
+
+HREF_MAP = {
+    "index.html": ("#/", "home"),
+    "about.html": ("#/about", "about"),
+    "programs.html": ("#/programs", "programs"),
+    "projects.html": ("#/projects", "projects"),
+    "team.html": ("#/team", "team"),
+    "partners.html": ("#/partners", "partners"),
+    "events.html": ("#/events", "events"),
+    "event-kickoff-night.html": ("#/events/kickoff-night", "event-detail"),
+    "blog.html": ("#/blog", "blog"),
+    "apply.html": ("#/apply", "apply"),
+    "privacy-policy.html": ("#/privacy-policy", "privacy-policy"),
+    "terms-of-use.html": ("#/terms-of-use", "terms-of-use"),
+}
+
+def fix_links(body):
+    for old, (hash_href, route_id) in HREF_MAP.items():
+        body = body.replace(f'href="{old}"', f'href="{hash_href}" data-route="{route_id}"')
+    # dead-end placeholder links -> inert, so they don't jump anywhere unexpected
+    body = re.sub(r'href="#"(?!/)', 'href="javascript:void(0)"', body)
+    return body
+
+sections = []
+for route_id, path, title, body in ROUTES:
+    body_fixed = fix_links(body)
+    active = " active" if route_id == "home" else ""
+    sections.append(
+        f'<section class="route{active}" id="route-{route_id}" data-path="{path}" data-title="{title}">\n{body_fixed}\n</section>'
+    )
+sections_html = "\n".join(sections)
+
+NAV = """
+    <header class="nav">
+      <div class="wrap">
+        <a class="brand-mark" href="#/" data-route="home">COMET FOUNDRY</a>
+        <nav class="nav-links">
+          <a href="#/about" data-route="about">About</a>
+          <a href="#/programs" data-route="programs">Programs</a>
+          <a href="#/projects" data-route="projects">Projects</a>
+          <a href="#/team" data-route="team">Team</a>
+          <a href="#/partners" data-route="partners">Partners</a>
+          <a href="#/events" data-route="events">Events</a>
+          <a href="#/blog" data-route="blog">Blog</a>
+        </nav>
+        <a class="nav-cta" href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=HR0ojU2c90uxbgMtFd6fbIhHjy7i2rpHt7VcaeT3yedUMkQwTTU4TkpUNFczMVQzS0cwUUVaWEw0WC4u&route=shorturl&b2b=true" target="_blank" rel="noopener">APPLY →</a>
+        <button id="nav-toggle" class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
+      </div>
+      <div id="mobile-menu" class="mobile-menu">
+        <a href="#/about" data-route="about">About</a>
+        <a href="#/programs" data-route="programs">Programs</a>
+        <a href="#/projects" data-route="projects">Projects</a>
+        <a href="#/team" data-route="team">Team</a>
+        <a href="#/partners" data-route="partners">Partners</a>
+        <a href="#/events" data-route="events">Events</a>
+        <a href="#/blog" data-route="blog">Blog</a>
+        <a href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=HR0ojU2c90uxbgMtFd6fbIhHjy7i2rpHt7VcaeT3yedUMkQwTTU4TkpUNFczMVQzS0cwUUVaWEw0WC4u&route=shorturl&b2b=true" target="_blank" rel="noopener" class="cta-row">Apply →</a>
+      </div>
+    </header>
+"""
+
+FOOTER = """
+    <footer>
+      <div class="wrap">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <h4>Comet Foundry</h4>
+            <p>A hacker house at UTD. No perfect ideas. Just interesting ones.</p>
+          </div>
+          <div class="footer-links">
+            <div>
+              <h5>Explore</h5>
+              <ul>
+                <li><a href="#/about" data-route="about">About</a></li>
+                <li><a href="#/programs" data-route="programs">Programs</a></li>
+                <li><a href="#/projects" data-route="projects">Projects</a></li>
+                <li><a href="#/team" data-route="team">Team</a></li>
+                <li><a href="#/partners" data-route="partners">Partners</a></li>
+                <li><a href="#/events" data-route="events">Events</a></li>
+                <li><a href="#/blog" data-route="blog">Blog</a></li>
+              </ul>
+            </div>
+            <div>
+              <h5>Contact</h5>
+              <ul>
+                <li><a href="mailto:info@cometfoundry.com">info@cometfoundry.com</a></li>
+                <li><a href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=HR0ojU2c90uxbgMtFd6fbIhHjy7i2rpHt7VcaeT3yedUMkQwTTU4TkpUNFczMVQzS0cwUUVaWEw0WC4u&route=shorturl&b2b=true" target="_blank" rel="noopener">Apply →</a></li>
+              </ul>
+              <div class="social-icons">
+                <a href="https://www.linkedin.com/company/cometfoundry/" target="_blank" rel="noopener" aria-label="Comet Foundry on LinkedIn">
+                  <svg viewBox="0 0 24 24"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4v15h-4V8zm7.5 0h3.8v2.05h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V23h-4v-6.9c0-1.65-.03-3.77-2.3-3.77-2.3 0-2.65 1.8-2.65 3.65V23h-4V8z"/></svg>
+                </a>
+                <a href="https://www.instagram.com/cometfoundry" target="_blank" rel="noopener" aria-label="Comet Foundry on Instagram">
+                  <svg viewBox="0 0 24 24"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.31-1.46.72-2.13 1.38C1.35 2.68.94 3.35.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.31.79.72 1.46 1.38 2.13.67.66 1.34 1.07 2.13 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.31 1.46-.72 2.13-1.38.66-.67 1.07-1.34 1.38-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.31-.79-.72-1.46-1.38-2.13C20.32 1.35 19.65.94 18.86.63c-.76-.3-1.64-.5-2.91-.56C14.67.01 14.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 18.16 12 6.16 6.16 0 0 0 12 5.84zM12 16a4 4 0 1 1 4-4 4 4 0 0 1-4 4zm6.41-10.87a1.44 1.44 0 1 1-1.44-1.44 1.44 1.44 0 0 1 1.44 1.44z"/></svg>
+                </a>
+                <a href="https://discord.com/invite/Hdg8VBFUW" target="_blank" rel="noopener" aria-label="Comet Foundry on Discord">
+                  <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.099.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.076.076 0 0 0-.04.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.055c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.331c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.418 2.157-2.418 1.21 0 2.176 1.094 2.157 2.418 0 1.334-.955 2.419-2.157 2.419zm7.974 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.418 2.157-2.418 1.21 0 2.176 1.094 2.157 2.418 0 1.334-.946 2.419-2.157 2.419z"/></svg>
+                </a>
+              </div>
+            </div>
+            <div>
+              <h5>Legal</h5>
+              <ul>
+                <li><a href="#/privacy-policy" data-route="privacy-policy">Privacy Policy</a></li>
+                <li><a href="#/terms-of-use" data-route="terms-of-use">Terms of Use</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <span class="mono">© 2026 Comet Foundry. All rights reserved.</span>
+          <span class="footer-easter">Built by humans — every em dash placed manually. :)</span>
+          <span class="mono fb-right">EST. 2026 / UT DALLAS</span>
+        </div>
+      </div>
+    </footer>
+"""
+
+JS = """
+// ---- Lab door ----
+const door = document.getElementById('door');
+const openBtn = document.getElementById('open-btn');
+const doorStatus = document.getElementById('door-status');
+const main = document.getElementById('main');
+
+openBtn.addEventListener('click', () => {
+  doorStatus.innerHTML = '<span class="dot"></span>LAB STATUS: OPEN ✓';
+  doorStatus.classList.add('open');
+  openBtn.textContent = 'OPENING...';
+  setTimeout(() => {
+    door.classList.add('open');
+  }, 350);
+});
+
+// ---- I'm bored button ----
+const ideas = [
+  'Build something.',
+  'Find a teammate.',
+  'Go to an event.',
+  'Start a stupid idea.',
+  'Ask someone smarter than you.',
+  'Touch grass.'
+];
+const boredBtn = document.getElementById('bored-btn');
+const boredPopup = document.getElementById('bored-popup');
+const boredResult = document.getElementById('bored-result');
+let lastIdea = -1;
+
+boredBtn.addEventListener('click', () => {
+  let i = Math.floor(Math.random() * ideas.length);
+  if (i === lastIdea) i = (i + 1) % ideas.length;
+  lastIdea = i;
+  boredResult.textContent = ideas[i];
+  boredPopup.classList.add('show');
+});
+
+document.addEventListener('click', (e) => {
+  if (!boredPopup.contains(e.target) && e.target !== boredBtn) {
+    boredPopup.classList.remove('show');
+  }
+});
+
+// ---- Mobile menu toggle ----
+const navToggle = document.getElementById('nav-toggle');
+const mobileMenu = document.getElementById('mobile-menu');
+if (navToggle && mobileMenu) {
+  navToggle.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    navToggle.textContent = open ? '✕' : '☰';
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+}
+
+// ---- Router (click-delegated, not hash-event dependent) ----
+const routes = document.querySelectorAll('.route');
+const routeTitles = {};
+routes.forEach(r => { routeTitles[r.id.replace('route-', '')] = r.getAttribute('data-title'); });
+
+function navigate(routeId, skipHash) {
+  const target = document.getElementById('route-' + routeId) || document.getElementById('route-home');
+  routes.forEach(r => r.classList.remove('active'));
+  target.classList.add('active');
+  document.title = (routeTitles[routeId] || 'Home') + ' — Comet Foundry';
+
+  document.querySelectorAll('[data-route]').forEach(a => a.classList.remove('active'));
+  document.querySelectorAll('[data-route="' + routeId + '"]').forEach(a => a.classList.add('active'));
+
+  try { window.scrollTo(0, 0); } catch (e) {}
+
+  if (mobileMenu) {
+    mobileMenu.classList.remove('open');
+    if (navToggle) { navToggle.textContent = '☰'; navToggle.setAttribute('aria-expanded', 'false'); }
+  }
+
+  if (!skipHash) {
+    try { history.replaceState(null, '', '#/' + (routeId === 'home' ? '' : routeId)); } catch (e) {}
+  }
+
+  const pastToggle = document.getElementById('past-toggle');
+  const pastEvents = document.getElementById('past-events');
+  if (pastToggle && pastEvents && !pastToggle.dataset.wired) {
+    pastToggle.dataset.wired = '1';
+    pastToggle.addEventListener('click', () => {
+      pastEvents.classList.toggle('show');
+      pastToggle.textContent = pastEvents.classList.contains('show') ? 'HIDE PAST EVENTS' : 'SHOW PAST EVENTS →';
+    });
+  }
+}
+
+// ---- Events calendar ----
+const CAL_EVENTS = [
+  { date: '2026-08-24', title: 'Foundry Kickoff Night', route: 'event-detail' },
+  { date: '2026-09-03', title: 'Build Sprint: Weekend v1' },
+  { date: '2026-09-10', title: 'Think Lab: Critique Night' },
+  { date: '2026-09-18', title: 'Network Lab: Founder Dinner' },
+  { date: '2026-05-02', title: 'Spring Demo Night' },
+  { date: '2026-04-11', title: 'Build Sprint: Hardware Weekend' }
+];
+
+(function initCalendar() {
+  const grid = document.getElementById('cal-grid');
+  if (!grid) return;
+  const monthLabel = document.getElementById('cal-month-label');
+  const today = new Date();
+  let viewYear = today.getFullYear();
+  let viewMonth = today.getMonth();
+
+  function render() {
+    grid.innerHTML = '';
+    ['SUN','MON','TUE','WED','THU','FRI','SAT'].forEach(d => {
+      const el = document.createElement('div');
+      el.className = 'cal-dow';
+      el.textContent = d;
+      grid.appendChild(el);
+    });
+
+    const firstOfMonth = new Date(viewYear, viewMonth, 1);
+    const startDow = firstOfMonth.getDay();
+    const gridStart = new Date(viewYear, viewMonth, 1 - startDow);
+
+    for (let i = 0; i < 42; i++) {
+      const cellDate = new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + i);
+      const cell = document.createElement('div');
+      cell.className = 'cal-cell';
+      if (cellDate.getMonth() !== viewMonth) cell.classList.add('muted');
+      if (cellDate.toDateString() === today.toDateString()) cell.classList.add('today');
+
+      const num = document.createElement('span');
+      num.className = 'date-num';
+      num.textContent = cellDate.getDate();
+      cell.appendChild(num);
+
+      const iso = cellDate.getFullYear() + '-' + String(cellDate.getMonth()+1).padStart(2,'0') + '-' + String(cellDate.getDate()).padStart(2,'0');
+      CAL_EVENTS.filter(e => e.date === iso).forEach(e => {
+        const pill = document.createElement('a');
+        pill.className = 'cal-pill';
+        pill.textContent = e.title;
+        pill.href = e.route ? '#/events/kickoff-night' : 'javascript:void(0)';
+        if (e.route) pill.setAttribute('data-route', e.route);
+        cell.appendChild(pill);
+      });
+
+      grid.appendChild(cell);
+    }
+    monthLabel.textContent = firstOfMonth.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+  }
+
+  document.getElementById('cal-today')?.addEventListener('click', () => { viewYear = today.getFullYear(); viewMonth = today.getMonth(); render(); });
+  document.getElementById('cal-prev')?.addEventListener('click', () => { viewMonth -= 1; if (viewMonth < 0) { viewMonth = 11; viewYear -= 1; } render(); });
+  document.getElementById('cal-next')?.addEventListener('click', () => { viewMonth += 1; if (viewMonth > 11) { viewMonth = 0; viewYear += 1; } render(); });
+
+  render();
+})();
+
+// ---- Add to calendar: Outlook deeplink + .ics download ----
+const outlookLink = document.getElementById('cal-outlook-link');
+if (outlookLink) {
+  const params = new URLSearchParams({
+    subject: 'Foundry Kickoff Night',
+    startdt: '2026-08-24T19:00:00',
+    enddt: '2026-08-24T21:00:00',
+    location: 'UT Dallas — Lab 01',
+    body: "First open house of the semester. Tour the space, pitch a half-formed idea, find someone to build it with."
+  });
+  outlookLink.href = 'https://outlook.office.com/calendar/0/deeplink/compose?' + params.toString();
+}
+
+document.getElementById('add-cal-btn')?.addEventListener('click', () => {
+  const ics = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Comet Foundry//Events//EN',
+    'BEGIN:VEVENT',
+    'UID:kickoff-night-2026@cometfoundry.com',
+    'DTSTART:20260824T190000',
+    'DTEND:20260824T210000',
+    'SUMMARY:Foundry Kickoff Night',
+    'LOCATION:UT Dallas — Lab 01',
+    'DESCRIPTION:First open house of the semester. Tour the space\\, pitch a half-formed idea\\, find someone to build it with.',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\\r\\n');
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'foundry-kickoff-night.ics';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('[data-route]');
+  if (!link) return;
+  e.preventDefault();
+  navigate(link.getAttribute('data-route'));
+});
+
+navigate('home', true);
+"""
+
+html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comet Foundry — a hacker house at UTD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+{css}
+</style>
+</head>
+<body>
+
+  <div id="door">
+    <div class="door-status mono" id="door-status"><span class="dot"></span>LAB STATUS: CLOSED</div>
+    <h1 id="door-title">COMET<br>FOUNDRY</h1>
+    <button id="open-btn">OPEN LAB →</button>
+    <div id="door-meta" class="mono">EST. 2026 / UT DALLAS / LAB 01</div>
+  </div>
+
+  <main id="main">
+{NAV}
+{sections_html}
+{FOOTER}
+  </main>
+
+  <button id="bored-btn">I'M BORED →</button>
+  <div id="bored-popup">
+    <div class="result" id="bored-result">Build something.</div>
+    <span>tap again for another one</span>
+  </div>
+
+<script>
+{JS}
+</script>
+</body>
+</html>
+"""
+
+with open("comet-foundry-spa.html", "w") as f:
+    f.write(html)
+
+print("SPA written,", len(html), "bytes")
