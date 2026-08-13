@@ -1,6 +1,6 @@
 import os
 
-OUT = "/home/claude/comet-foundry-site"
+OUT = os.path.dirname(os.path.abspath(__file__))
 
 HEAD = """<!DOCTYPE html>
 <html lang="en">
