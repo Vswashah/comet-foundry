@@ -2,23 +2,38 @@ import os
 
 OUT = os.path.dirname(os.path.abspath(__file__))
 
+OG_BASE_URL = "https://www.cometfoundry.com"
+
 HEAD = """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{title} — Comet Foundry</title>
+<title>{page_title}</title>
+<meta name="description" content="{desc}">
+<link rel="canonical" href="{og_url}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Comet Foundry">
+<meta property="og:title" content="{page_title}">
+<meta property="og:description" content="{desc}">
+<meta property="og:url" content="{og_url}">
+<meta property="og:image" content="{og_image}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:url" content="{og_url}">
+<meta name="twitter:title" content="{page_title}">
+<meta name="twitter:description" content="{desc}">
+<meta name="twitter:image" content="{og_image}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
-<link rel="icon" type="image/png" href="assets/favicon.png?v=2">
+<link rel="icon" type="image/png" href="assets/favicon.png?v=3">
 </head>
 <body data-page="{page}">
 
   <div id="door">
     <div class="door-status mono" id="door-status"><span class="dot"></span>LAB STATUS: CLOSED</div>
-    <h1 id="door-title">COMET<br>FOUNDRY</h1>
+    <div id="door-title">COMET<br>FOUNDRY</div>
     <button id="open-btn">OPEN LAB →</button>
     <div id="door-meta" class="mono">EST. 2026 / UT DALLAS / LAB 01</div>
   </div>
@@ -31,7 +46,13 @@ HEAD = """<!DOCTYPE html>
           <a href="about.html" data-nav="about">About</a>
           <a href="programs.html" data-nav="programs">Programs</a>
           <a href="projects.html" data-nav="projects">Projects</a>
-          <a href="team.html" data-nav="team">Team</a>
+          <div class="nav-item-dropdown">
+            <span class="nav-dropdown-label" data-nav="team">Team</span>
+            <div class="nav-dropdown-menu">
+              <a href="founder.html" data-nav="founder">Founder</a>
+              <a href="team.html" data-nav="team">UTD Crew</a>
+            </div>
+          </div>
           <a href="partners.html" data-nav="partners">Partners</a>
           <a href="events.html" data-nav="events">Events</a>
           <a href="blog.html" data-nav="blog">Blog</a>
@@ -43,7 +64,9 @@ HEAD = """<!DOCTYPE html>
         <a href="about.html" data-nav="about">About</a>
         <a href="programs.html" data-nav="programs">Programs</a>
         <a href="projects.html" data-nav="projects">Projects</a>
-        <a href="team.html" data-nav="team">Team</a>
+        <span class="mobile-menu-label">Team</span>
+        <a href="founder.html" data-nav="founder" class="mobile-sub-link">↳ Founder</a>
+        <a href="team.html" data-nav="team" class="mobile-sub-link">↳ UTD Crew</a>
         <a href="partners.html" data-nav="partners">Partners</a>
         <a href="events.html" data-nav="events">Events</a>
         <a href="blog.html" data-nav="blog">Blog</a>
@@ -122,9 +145,15 @@ FOOTER = """
 </html>
 """
 
-def write(fname, title, page, body):
+DEFAULT_DESC = "A hacker house at UT Dallas. No perfect ideas. Just interesting ones."
+
+def write(fname, title, page, body, desc=None, full_title=None):
+    desc = desc or DEFAULT_DESC
+    page_title = full_title or f"{title} — Comet Foundry"
+    og_url = OG_BASE_URL + ("/" if fname == "index.html" else "/" + fname)
+    og_image = OG_BASE_URL + "/assets/comet-foundry-logo.png"
     with open(os.path.join(OUT, fname), "w") as f:
-        f.write(HEAD.format(title=title, page=page))
+        f.write(HEAD.format(page_title=page_title, page=page, desc=desc, og_url=og_url, og_image=og_image))
         f.write(body)
         f.write(FOOTER)
 
@@ -160,7 +189,7 @@ home_body = """
       <div class="wrap">
         <div class="sec-head">
           <span class="num">EXP 000 / WHAT WE ARE</span>
-          <h2>The Lab, in one paragraph</h2>
+          <h2>The <span class="hand" style="font-size:1.15em; color:var(--flask);">CF</span>, in one paragraph</h2>
         </div>
         <div class="about-grid">
           <div class="about-text">
@@ -172,10 +201,10 @@ home_body = """
             <span class="hand">currently cooking</span>
             <h3>Active Experiments</h3>
             <ul class="mono">
-              <li><span>Peer matching for team formation</span><span class="v">TESTING</span></li>
-              <li><span>Micro-grants for weekend builds</span><span class="v">LIVE</span></li>
-              <li><span>Open critique nights</span><span class="v">NO RESULTS YET</span></li>
-              <li><span>Alumni founder network</span><span class="v">IDEA → 01</span></li>
+              <li><span>Foundry Kickoff Night</span><span class="v">SEP 01</span></li>
+              <li><span>Peer matching for team formation</span><span class="v">TBD</span></li>
+              <li><span>Open critique nights</span><span class="v">TBD</span></li>
+              <li><span>Alumni founder network</span><span class="v">TBD</span></li>
             </ul>
           </div>
         </div>
@@ -276,11 +305,12 @@ home_body = """
         </div>
         <div class="partner-card" style="max-width:640px;">
           <div class="card-media">
+            <img src="assets/resilient-privacy-logo.jpg" alt="Resilient Privacy Inc.">
             <span class="tagpill mono">FEATURED PARTNER</span>
           </div>
           <div class="card-body">
             <h3>RESILIENT PRIVACY Inc.</h3>
-            <p>Comet Foundry's founding Industry Partner — advisory only, non-voting. Coordinates mentorship and internship referrals for opted-in members.</p>
+            <p><a href="https://www.resilientprivacy.com/?utm_source=chatgpt.com" target="_blank" rel="noopener">Resilient Privacy</a> is building an AI-native, unified platform for IT and cybersecurity operations.</p>
             <a class="card-link" href="partners.html">See all partners →</a>
           </div>
         </div>
@@ -327,7 +357,7 @@ home_body = """
       </div>
     </section>
 """
-write("index.html", "Home", "home", home_body)
+write("index.html", "Home", "home", home_body, desc="A hacker house at UT Dallas. No perfect ideas. Just interesting ones.", full_title="Comet Foundry — UT Dallas")
 
 # ---------------- ABOUT ----------------
 about_body = """
@@ -595,24 +625,6 @@ team_body = """
 
     <section class="tight">
       <div class="wrap">
-        <span class="section-label">FOUNDER</span>
-        <div class="profile-grid">
-          <a class="profile-card founder-card" href="founder.html">
-            <div class="profile-photo lead">
-              <span class="profile-tag">MEET THE FOUNDER →</span>
-              <img src="assets/vishva-patel.jpg" alt="Vishva Patel">
-            </div>
-            <div class="profile-body">
-              <h3>Vishva Patel</h3>
-              <div class="profile-role">Founder</div>
-            </div>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <section class="tight">
-      <div class="wrap">
         <span class="section-label">EXECUTIVE BOARD</span>
         <div class="profile-grid">""" + exec_cards + """
         </div>
@@ -654,8 +666,8 @@ founder_body = """
           <div class="founder-meta">
             <h2>Vishva Patel</h2>
             <div class="role">FOUNDER / COMET FOUNDRY</div>
-            <div class="sub">UT DALLAS / FALL 2026</div>
-            <p class="intro">I started Comet Foundry because I was tired of watching good ideas die in group chats. This page is less of a bio and more of a field note — why this exists, what I believe, and what I'm hoping you'll do with it.</p>
+            <div class="sub">UT DALLAS / SPRING 25 ALUMNUS</div>
+            <p class="intro"><strong>2× Founder. Cybersecurity Professional. Entrepreneur.</strong><br>10+ years of experience across enterprise technology, cybersecurity, and innovation. Former President of the Graduate Student Assembly at UT Dallas and student advocate representing 250,000+ students across the UT System. Passionate about building companies, communities, and opportunities that create lasting impact.</p>
             <span class="brand-line hand">Someone had to try. :)</span>
           </div>
         </div>
@@ -666,14 +678,23 @@ founder_body = """
       <div class="wrap">
         <span class="tag-label">FOUNDER'S LETTER</span>
         <h2 class="big">Why I Started This</h2>
-        <div class="founder-letter">
-          <p>There are a lot of smart people at UTD. There are a lot of ideas. There are a lot of people who want to build something. I wanted to create a place where those things could actually meet.</p>
-          <p>Most of the good ideas I heard died in group chats. Someone would say something interesting, a few people would hype it up, and then everyone went back to their normal week — not because the idea was bad, just because there was nowhere for it to go next.</p>
-          <p>Comet Foundry started because I got tired of watching that happen.</p>
-          <p>I wanted a place where you don't need to have it all figured out before you start — where "I have no idea if this will work" is a good enough reason to try something, not a reason to wait. Where you build the rough version instead of just talking about the polished one you'll get to eventually.</p>
-          <p>I wanted a place where ambitious, curious people actually run into each other — not because there's a mixer on the calendar, but because they're both in the room working on something. That's usually how the good collaborations start. Not from a pitch. From someone next to you asking what you're building and actually meaning it.</p>
-          <p>I wanted a place where your own ideas get pushed back on, because that's the only way they get better. Where failing at something doesn't mean you failed — it means you tried a thing most people never get around to trying.</p>
-          <p>And mostly, I wanted a place where an idea has a real shot at becoming something. Not a slide deck. Not a pitch. An actual thing that exists because you made it.</p>
+        <div class="letter-card">
+          <div class="founder-letter">
+            <p>When I founded Comet Foundry, I wasn't trying to create another student organization. I wanted to build a place where ideas don't die in group chats.</p>
+            <p>UT Dallas is filled with ambitious people, brilliant ideas, and future founders. The challenge isn't talent — it's creating the environment where talent can collide, collaborate, and build.</p>
+            <p>My vision is simple: make UTD the best place in the country for students to start something meaningful. A place where builders find co-founders, ideas become products, and students graduate not just with a degree, but with impact.</p>
+            <p>Comet Foundry exists for those willing to take a chance on an idea, learn by building, and create the future instead of waiting for it.</p>
+          </div>
+          <div class="letter-signature">
+            <span class="letter-signoff hand">— Vishva</span>
+            <div class="letter-author">
+              <img src="assets/vishva-patel.jpg" alt="Vishva Patel" class="letter-avatar">
+              <div>
+                <div class="letter-author-name">Vishva Patel</div>
+                <div class="letter-author-role">Founder, Comet Foundry</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -728,11 +749,12 @@ write("founder.html", "Founder", "founder", founder_body)
 
 
 # ---------------- PARTNERS ----------------
-def partner_card(grad, name, blurb, url=None):
+def partner_card(grad, name, blurb, url=None, logo=None):
     link_html = f'<a class="card-link" href="{url}" target="_blank" rel="noopener">Visit site →</a>' if url else ""
+    media_html = f'<img src="{logo}" alt="{name}">' if logo else ""
     return f"""
           <div class="partner-card">
-            <div class="card-media {grad}"></div>
+            <div class="card-media {grad}">{media_html}</div>
             <div class="card-body">
               <h3>{name}</h3>
               <p>{blurb}</p>
@@ -761,7 +783,7 @@ partners_body = """
     <section class="tight">
       <div class="wrap">
         <div class="card-grid">""" + \
-    partner_card("", "RESILIENT PRIVACY Inc.", "Comet Foundry's founding Industry Partner — advisory only, non-voting. Coordinates mentorship and internship referrals for opted-in members.", "https://www.resilientprivacy.com") + \
+    partner_card("", "RESILIENT PRIVACY Inc.", '<a href="https://www.resilientprivacy.com/?utm_source=chatgpt.com" target="_blank" rel="noopener">Resilient Privacy</a> is building an AI-native, unified platform for IT and cybersecurity operations.', "https://www.resilientprivacy.com/?utm_source=chatgpt.com", "assets/resilient-privacy-logo.jpg") + \
     coming_soon_partner_card() + \
     coming_soon_partner_card() + """
         </div>

@@ -4,17 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Founder — Comet Foundry</title>
+<meta name="description" content="A hacker house at UT Dallas. No perfect ideas. Just interesting ones.">
+<link rel="canonical" href="https://www.cometfoundry.com/founder.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Comet Foundry">
+<meta property="og:title" content="Founder — Comet Foundry">
+<meta property="og:description" content="A hacker house at UT Dallas. No perfect ideas. Just interesting ones.">
+<meta property="og:url" content="https://www.cometfoundry.com/founder.html">
+<meta property="og:image" content="https://www.cometfoundry.com/assets/comet-foundry-logo.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:url" content="https://www.cometfoundry.com/founder.html">
+<meta name="twitter:title" content="Founder — Comet Foundry">
+<meta name="twitter:description" content="A hacker house at UT Dallas. No perfect ideas. Just interesting ones.">
+<meta name="twitter:image" content="https://www.cometfoundry.com/assets/comet-foundry-logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
-<link rel="icon" type="image/png" href="assets/favicon.png?v=2">
+<link rel="icon" type="image/png" href="assets/favicon.png?v=3">
 </head>
 <body data-page="founder">
 
   <div id="door">
     <div class="door-status mono" id="door-status"><span class="dot"></span>LAB STATUS: CLOSED</div>
-    <h1 id="door-title">COMET<br>FOUNDRY</h1>
+    <div id="door-title">COMET<br>FOUNDRY</div>
     <button id="open-btn">OPEN LAB →</button>
     <div id="door-meta" class="mono">EST. 2026 / UT DALLAS / LAB 01</div>
   </div>
@@ -27,7 +40,13 @@
           <a href="about.html" data-nav="about">About</a>
           <a href="programs.html" data-nav="programs">Programs</a>
           <a href="projects.html" data-nav="projects">Projects</a>
-          <a href="team.html" data-nav="team">Team</a>
+          <div class="nav-item-dropdown">
+            <span class="nav-dropdown-label" data-nav="team">Team</span>
+            <div class="nav-dropdown-menu">
+              <a href="founder.html" data-nav="founder">Founder</a>
+              <a href="team.html" data-nav="team">UTD Crew</a>
+            </div>
+          </div>
           <a href="partners.html" data-nav="partners">Partners</a>
           <a href="events.html" data-nav="events">Events</a>
           <a href="blog.html" data-nav="blog">Blog</a>
@@ -39,7 +58,9 @@
         <a href="about.html" data-nav="about">About</a>
         <a href="programs.html" data-nav="programs">Programs</a>
         <a href="projects.html" data-nav="projects">Projects</a>
-        <a href="team.html" data-nav="team">Team</a>
+        <span class="mobile-menu-label">Team</span>
+        <a href="founder.html" data-nav="founder" class="mobile-sub-link">↳ Founder</a>
+        <a href="team.html" data-nav="team" class="mobile-sub-link">↳ UTD Crew</a>
         <a href="partners.html" data-nav="partners">Partners</a>
         <a href="events.html" data-nav="events">Events</a>
         <a href="blog.html" data-nav="blog">Blog</a>
@@ -60,8 +81,8 @@
           <div class="founder-meta">
             <h2>Vishva Patel</h2>
             <div class="role">FOUNDER / COMET FOUNDRY</div>
-            <div class="sub">UT DALLAS / FALL 2026</div>
-            <p class="intro">I started Comet Foundry because I was tired of watching good ideas die in group chats. This page is less of a bio and more of a field note — why this exists, what I believe, and what I'm hoping you'll do with it.</p>
+            <div class="sub">UT DALLAS / SPRING 25 ALUMNUS</div>
+            <p class="intro"><strong>2× Founder. Cybersecurity Professional. Entrepreneur.</strong><br>10+ years of experience across enterprise technology, cybersecurity, and innovation. Former President of the Graduate Student Assembly at UT Dallas and student advocate representing 250,000+ students across the UT System. Passionate about building companies, communities, and opportunities that create lasting impact.</p>
             <span class="brand-line hand">Someone had to try. :)</span>
           </div>
         </div>
@@ -72,14 +93,23 @@
       <div class="wrap">
         <span class="tag-label">FOUNDER'S LETTER</span>
         <h2 class="big">Why I Started This</h2>
-        <div class="founder-letter">
-          <p>There are a lot of smart people at UTD. There are a lot of ideas. There are a lot of people who want to build something. I wanted to create a place where those things could actually meet.</p>
-          <p>Most of the good ideas I heard died in group chats. Someone would say something interesting, a few people would hype it up, and then everyone went back to their normal week — not because the idea was bad, just because there was nowhere for it to go next.</p>
-          <p>Comet Foundry started because I got tired of watching that happen.</p>
-          <p>I wanted a place where you don't need to have it all figured out before you start — where "I have no idea if this will work" is a good enough reason to try something, not a reason to wait. Where you build the rough version instead of just talking about the polished one you'll get to eventually.</p>
-          <p>I wanted a place where ambitious, curious people actually run into each other — not because there's a mixer on the calendar, but because they're both in the room working on something. That's usually how the good collaborations start. Not from a pitch. From someone next to you asking what you're building and actually meaning it.</p>
-          <p>I wanted a place where your own ideas get pushed back on, because that's the only way they get better. Where failing at something doesn't mean you failed — it means you tried a thing most people never get around to trying.</p>
-          <p>And mostly, I wanted a place where an idea has a real shot at becoming something. Not a slide deck. Not a pitch. An actual thing that exists because you made it.</p>
+        <div class="letter-card">
+          <div class="founder-letter">
+            <p>When I founded Comet Foundry, I wasn't trying to create another student organization. I wanted to build a place where ideas don't die in group chats.</p>
+            <p>UT Dallas is filled with ambitious people, brilliant ideas, and future founders. The challenge isn't talent — it's creating the environment where talent can collide, collaborate, and build.</p>
+            <p>My vision is simple: make UTD the best place in the country for students to start something meaningful. A place where builders find co-founders, ideas become products, and students graduate not just with a degree, but with impact.</p>
+            <p>Comet Foundry exists for those willing to take a chance on an idea, learn by building, and create the future instead of waiting for it.</p>
+          </div>
+          <div class="letter-signature">
+            <span class="letter-signoff hand">— Vishva</span>
+            <div class="letter-author">
+              <img src="assets/vishva-patel.jpg" alt="Vishva Patel" class="letter-avatar">
+              <div>
+                <div class="letter-author-name">Vishva Patel</div>
+                <div class="letter-author-role">Founder, Comet Foundry</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

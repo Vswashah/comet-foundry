@@ -17,6 +17,10 @@ with open("assets/vishva-patel.jpg", "rb") as f:
     PHOTO_B64 = base64.b64encode(f.read()).decode("ascii")
 PHOTO_DATA_URI = "data:image/jpeg;base64," + PHOTO_B64
 
+with open("assets/resilient-privacy-logo.jpg", "rb") as f:
+    PARTNER_LOGO_B64 = base64.b64encode(f.read()).decode("ascii")
+PARTNER_LOGO_DATA_URI = "data:image/jpeg;base64," + PARTNER_LOGO_B64
+
 # Extra SPA-only styling: route visibility
 css += """
 .route{ display:none; }
@@ -64,6 +68,8 @@ def fix_links(body):
     body = re.sub(r'href="#"(?!/)', 'href="javascript:void(0)"', body)
     # embed the founder photo instead of a relative file path
     body = body.replace('src="assets/vishva-patel.jpg"', f'src="{PHOTO_DATA_URI}"')
+    # embed the Resilient Privacy logo instead of a relative file path
+    body = body.replace('src="assets/resilient-privacy-logo.jpg"', f'src="{PARTNER_LOGO_DATA_URI}"')
     return body
 
 sections = []
@@ -83,7 +89,13 @@ NAV = f"""
           <a href="#/about" data-route="about">About</a>
           <a href="#/programs" data-route="programs">Programs</a>
           <a href="#/projects" data-route="projects">Projects</a>
-          <a href="#/team" data-route="team">Team</a>
+          <div class="nav-item-dropdown">
+            <span class="nav-dropdown-label" data-nav="team">Team</span>
+            <div class="nav-dropdown-menu">
+              <a href="#/founder" data-route="founder">Founder</a>
+              <a href="#/team" data-route="team">UTD Crew</a>
+            </div>
+          </div>
           <a href="#/partners" data-route="partners">Partners</a>
           <a href="#/events" data-route="events">Events</a>
           <a href="#/blog" data-route="blog">Blog</a>
@@ -95,7 +107,9 @@ NAV = f"""
         <a href="#/about" data-route="about">About</a>
         <a href="#/programs" data-route="programs">Programs</a>
         <a href="#/projects" data-route="projects">Projects</a>
-        <a href="#/team" data-route="team">Team</a>
+        <span class="mobile-menu-label">Team</span>
+        <a href="#/founder" data-route="founder" class="mobile-sub-link">↳ Founder</a>
+        <a href="#/team" data-route="team" class="mobile-sub-link">↳ UTD Crew</a>
         <a href="#/partners" data-route="partners">Partners</a>
         <a href="#/events" data-route="events">Events</a>
         <a href="#/blog" data-route="blog">Blog</a>
@@ -396,7 +410,7 @@ html = f"""<!DOCTYPE html>
 
   <div id="door">
     <div class="door-status mono" id="door-status"><span class="dot"></span>LAB STATUS: CLOSED</div>
-    <h1 id="door-title">COMET<br>FOUNDRY</h1>
+    <div id="door-title">COMET<br>FOUNDRY</div>
     <button id="open-btn">OPEN LAB →</button>
     <div id="door-meta" class="mono">EST. 2026 / UT DALLAS / LAB 01</div>
   </div>
