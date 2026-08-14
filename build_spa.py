@@ -1,8 +1,13 @@
 import re
+import base64
 import generate as g
 
 with open("styles.css") as f:
     css = f.read()
+
+with open("assets/comet-foundry-logo.png", "rb") as f:
+    LOGO_B64 = base64.b64encode(f.read()).decode("ascii")
+LOGO_DATA_URI = "data:image/png;base64," + LOGO_B64
 
 # Extra SPA-only styling: route visibility
 css += """
@@ -58,10 +63,10 @@ for route_id, path, title, body in ROUTES:
     )
 sections_html = "\n".join(sections)
 
-NAV = """
+NAV = f"""
     <header class="nav">
       <div class="wrap">
-        <a class="brand-mark" href="#/" data-route="home">COMET FOUNDRY</a>
+        <a class="brand-mark" href="#/" data-route="home"><img src="{LOGO_DATA_URI}" alt="Comet Foundry" class="nav-logo">COMET FOUNDRY</a>
         <nav class="nav-links">
           <a href="#/about" data-route="about">About</a>
           <a href="#/programs" data-route="programs">Programs</a>
@@ -87,13 +92,15 @@ NAV = """
     </header>
 """
 
-FOOTER = """
+FOOTER = f"""
     <footer>
       <div class="wrap">
         <div class="footer-top">
           <div class="footer-brand">
+            <img src="{LOGO_DATA_URI}" alt="Comet Foundry" class="footer-logo">
             <h4>Comet Foundry</h4>
-            <p>A hacker house at UTD. No perfect ideas. Just interesting ones.</p>
+            <p class="footer-brand-line">UT Dallas / Fall 2026</p>
+            <p class="footer-brand-line hand">Someone had to try. :)</p>
           </div>
           <div class="footer-links">
             <div>
@@ -368,6 +375,7 @@ html = f"""<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="{LOGO_DATA_URI}">
 <style>
 {css}
 </style>

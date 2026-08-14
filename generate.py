@@ -12,6 +12,7 @@ HEAD = """<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<link rel="icon" type="image/png" href="assets/comet-foundry-logo.png">
 </head>
 <body data-page="{page}">
 
@@ -25,7 +26,7 @@ HEAD = """<!DOCTYPE html>
   <main id="main">
     <header class="nav">
       <div class="wrap">
-        <a class="brand-mark" href="index.html">COMET FOUNDRY</a>
+        <a class="brand-mark" href="index.html"><img src="assets/comet-foundry-logo.png" alt="Comet Foundry" class="nav-logo">COMET FOUNDRY</a>
         <nav class="nav-links">
           <a href="about.html" data-nav="about">About</a>
           <a href="programs.html" data-nav="programs">Programs</a>
@@ -56,8 +57,10 @@ FOOTER = """
       <div class="wrap">
         <div class="footer-top">
           <div class="footer-brand">
+            <img src="assets/comet-foundry-logo.png" alt="Comet Foundry" class="footer-logo">
             <h4>Comet Foundry</h4>
-            <p>A hacker house at UTD. No perfect ideas. Just interesting ones.</p>
+            <p class="footer-brand-line">UT Dallas / Fall 2026</p>
+            <p class="footer-brand-line hand">Someone had to try. :)</p>
           </div>
           <div class="footer-links">
             <div>
@@ -300,7 +303,7 @@ home_body = """
           <div class="event-right">
             <div class="row"><span>STATUS</span><b>EXPERIMENT IN PROGRESS</b></div>
             <div class="row"><span>LOCATION</span><b>UT Dallas — Lab 01</b></div>
-            <a class="rsvp-btn" href="event-kickoff-night.html">RSVP →</a>
+            <a class="rsvp-btn" href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=HR0ojU2c90uxbgMtFd6fbIhHjy7i2rpHt7VcaeT3yedUOVlFMEpKR0dYMDhLUzAyMjQ2QklROFVaVC4u&route=shorturl" target="_blank" rel="noopener">RSVP →</a>
           </div>
         </div>
         <div style="text-align:right; margin-top:24px;">
@@ -667,7 +670,7 @@ partners_body = """
           <h2>Become A Partner</h2>
           <p>Fund an experiment, send a mentor, or just come to a demo night and see what's brewing.</p>
         </div>
-        <a class="rsvp-btn" href="mailto:partners@cometfoundry.com" style="background:var(--ink); color:var(--paper);">GET IN TOUCH →</a>
+        <a class="rsvp-btn" href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=HR0ojU2c90uxbgMtFd6fbIhHjy7i2rpHt7VcaeT3yedUNVNQVFY2NUpKWkVSTDFZR01LQjlRUTdJQi4u&route=shorturl" target="_blank" rel="noopener" style="background:var(--ink); color:var(--paper);">GET IN TOUCH →</a>
       </div>
     </section>
 """
@@ -790,7 +793,7 @@ event_detail_body = """
           <span class="num mono">SAVE YOUR SPOT</span>
           <h2>RSVP</h2>
         </div>
-        <a class="rsvp-btn" href="apply.html" style="background:var(--ink); color:var(--paper);">RSVP →</a>
+        <a class="rsvp-btn" href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=HR0ojU2c90uxbgMtFd6fbIhHjy7i2rpHt7VcaeT3yedUOVlFMEpKR0dYMDhLUzAyMjQ2QklROFVaVC4u&route=shorturl" target="_blank" rel="noopener" style="background:var(--ink); color:var(--paper);">RSVP →</a>
       </div>
     </section>
 """
