@@ -10,7 +10,7 @@ HEAD = """<!DOCTYPE html>
 <title>{title} — Comet Foundry</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body data-page="{page}">
@@ -236,6 +236,35 @@ home_body = """
       </div>
     </section>
 
+    <!-- ================= DEMO DAY ================= -->
+    <section class="demoday" id="demo-day">
+      <div class="demoday-pin wrap">
+        <p class="demoday-meta">COMET FOUNDRY / FALL 2026 / FINAL EXPERIMENT</p>
+
+        <div class="demoday-title" id="demoday-title">
+          <span class="word">DEMO</span>
+          <span class="word day">DAY</span>
+        </div>
+
+        <p class="demoday-subhead">Show Us What You Made.</p>
+
+        <div class="demoday-meta-row">
+          <span class="demoday-pill">DECEMBER 2026</span>
+          <span class="demoday-pill status">STATUS: IN PROGRESS</span>
+        </div>
+
+        <p class="demoday-sub">All semester, Comet Foundry is building, questioning, connecting, and experimenting. Demo Day is where it all comes together.</p>
+        <p class="demoday-sub2">You don't need a startup. You don't need a perfect product. You just need something you made.</p>
+
+        <div class="demoday-cta">
+          <div class="demoday-cta-buttons">
+            <a class="demoday-btn-primary" href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=HR0ojU2c90uxbgMtFd6fbIhHjy7i2rpHt7VcaeT3yedUMkQwTTU4TkpUNFczMVQzS0cwUUVaWEw0WC4u&route=shorturl&b2b=true" target="_blank" rel="noopener">BUILD TOWARD DEMO DAY →</a>
+          </div>
+          <span class="demoday-hand hand">someone had to try. :)</span>
+        </div>
+      </div>
+    </section>
+
     <section class="tight">
       <div class="wrap">
         <div class="sec-head">
@@ -264,7 +293,7 @@ home_body = """
         <div class="event-card">
           <span class="event-annot hand">you should probably come to this</span>
           <div class="event-left">
-            <div class="event-date">AUG 24 / 7:00 PM</div>
+            <div class="event-date">SEP 01 / 7:00 PM</div>
             <h3>Foundry Kickoff Night</h3>
             <p>First open house of the semester. Tour the space, pitch a half-formed idea, find someone to build it with.</p>
           </div>
@@ -701,7 +730,7 @@ events_body = """
         <div class="event-card">
           <span class="event-annot hand">next up</span>
           <div class="event-left">
-            <div class="event-date">AUG 24 / 7:00 PM</div>
+            <div class="event-date">SEP 01 / 7:00 PM</div>
             <h3>Foundry Kickoff Night</h3>
             <p>First open house of the semester. Tour the space, pitch a half-formed idea, find someone to build it with.</p>
           </div>
@@ -716,15 +745,10 @@ events_body = """
           <span class="num">UPCOMING</span>
           <h2 style="font-size:clamp(24px,4vw,32px);">More On The Calendar</h2>
         </div>
-        <div>""" + \
-    event_row("SEP 03", "Build Sprint: Weekend v1", "Show up Friday with an idea, leave Sunday with a working prototype.", "#") + \
-    event_row("SEP 10", "Think Lab: Critique Night", "Bring an idea, get it stress-tested by people who won't just say it's great.", "#") + \
-    event_row("SEP 18", "Network Lab: Founder Dinner", "Small-group dinner with partner-side founders. The useful kind of networking.", "#") + """
-        </div>
-        <button id="past-toggle" class="past-toggle mono">SHOW PAST EVENTS →</button>
-        <div id="past-events">""" + \
-    event_row("MAY 02", "Spring Demo Night", "Members showed off a semester's worth of experiments.", "#") + \
-    event_row("APR 11", "Build Sprint: Hardware Weekend", "First time opening the hardware bench to non-members.", "#") + """
+        <div class="coming-soon-card" style="margin-top:24px;">
+          <span class="tag mono">COMING SOON</span>
+          <h3>Event</h3>
+          <p>Nothing else on the calendar yet — check back as the semester fills in.</p>
         </div>
       </div>
     </section>
@@ -751,7 +775,7 @@ event_detail_body = """
           <span class="hand">the details</span>
           <h3>Event Info</h3>
           <ul class="mono">
-            <li><span>Date</span><span class="v">AUG 24, 2026</span></li>
+            <li><span>Date</span><span class="v">SEP 01, 2026</span></li>
             <li><span>Time</span><span class="v">7:00 PM</span></li>
             <li><span>Location</span><span class="v">UT Dallas — Lab 01</span></li>
             <li><span>Status</span><span class="v">EXPERIMENT IN PROGRESS</span></li>

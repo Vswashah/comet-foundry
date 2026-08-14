@@ -74,24 +74,9 @@ if (navToggle && mobileMenu) {
   });
 }
 
-// ---- Past events toggle (events page only) ----
-const pastToggle = document.getElementById('past-toggle');
-const pastEvents = document.getElementById('past-events');
-if (pastToggle && pastEvents) {
-  pastToggle.addEventListener('click', () => {
-    pastEvents.classList.toggle('show');
-    pastToggle.textContent = pastEvents.classList.contains('show') ? 'HIDE PAST EVENTS' : 'SHOW PAST EVENTS →';
-  });
-}
-
 // ---- Events calendar (Events page only) ----
 const CAL_EVENTS = [
-  { date: '2026-08-24', title: 'Foundry Kickoff Night', href: 'event-kickoff-night.html' },
-  { date: '2026-09-03', title: 'Build Sprint: Weekend v1' },
-  { date: '2026-09-10', title: 'Think Lab: Critique Night' },
-  { date: '2026-09-18', title: 'Network Lab: Founder Dinner' },
-  { date: '2026-05-02', title: 'Spring Demo Night' },
-  { date: '2026-04-11', title: 'Build Sprint: Hardware Weekend' }
+  { date: '2026-09-01', title: 'Foundry Kickoff Night', href: 'event-kickoff-night.html' }
 ];
 
 (function initCalendar() {
@@ -153,8 +138,8 @@ const outlookLink = document.getElementById('cal-outlook-link');
 if (outlookLink) {
   const params = new URLSearchParams({
     subject: 'Foundry Kickoff Night',
-    startdt: '2026-08-24T19:00:00',
-    enddt: '2026-08-24T21:00:00',
+    startdt: '2026-09-01T19:00:00',
+    enddt: '2026-09-01T21:00:00',
     location: 'UT Dallas — Lab 01',
     body: "First open house of the semester. Tour the space, pitch a half-formed idea, find someone to build it with."
   });
@@ -169,8 +154,8 @@ document.getElementById('add-cal-btn')?.addEventListener('click', () => {
     'PRODID:-//Comet Foundry//Events//EN',
     'BEGIN:VEVENT',
     'UID:kickoff-night-2026@cometfoundry.org',
-    'DTSTART:20260824T190000',
-    'DTEND:20260824T210000',
+    'DTSTART:20260901T190000',
+    'DTEND:20260901T210000',
     'SUMMARY:Foundry Kickoff Night',
     'LOCATION:UT Dallas — Lab 01',
     'DESCRIPTION:First open house of the semester. Tour the space\\, pitch a half-formed idea\\, find someone to build it with.',
@@ -187,3 +172,28 @@ document.getElementById('add-cal-btn')?.addEventListener('click', () => {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 });
+
+// ---- Demo Day: title reveal on scroll into view ----
+(function initDemoDayReveal() {
+  try {
+  const title = document.getElementById('demoday-title');
+  if (!title) return;
+  const reduceMotion = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (reduceMotion) {
+    title.classList.add('revealed');
+    return;
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.35 });
+
+  io.observe(title);
+  } catch (e) { console.warn('Demo Day reveal animation skipped:', e); }
+})();

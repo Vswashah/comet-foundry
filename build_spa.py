@@ -223,26 +223,11 @@ function navigate(routeId, skipHash) {
   if (!skipHash) {
     try { history.replaceState(null, '', '#/' + (routeId === 'home' ? '' : routeId)); } catch (e) {}
   }
-
-  const pastToggle = document.getElementById('past-toggle');
-  const pastEvents = document.getElementById('past-events');
-  if (pastToggle && pastEvents && !pastToggle.dataset.wired) {
-    pastToggle.dataset.wired = '1';
-    pastToggle.addEventListener('click', () => {
-      pastEvents.classList.toggle('show');
-      pastToggle.textContent = pastEvents.classList.contains('show') ? 'HIDE PAST EVENTS' : 'SHOW PAST EVENTS →';
-    });
-  }
 }
 
 // ---- Events calendar ----
 const CAL_EVENTS = [
-  { date: '2026-08-24', title: 'Foundry Kickoff Night', route: 'event-detail' },
-  { date: '2026-09-03', title: 'Build Sprint: Weekend v1' },
-  { date: '2026-09-10', title: 'Think Lab: Critique Night' },
-  { date: '2026-09-18', title: 'Network Lab: Founder Dinner' },
-  { date: '2026-05-02', title: 'Spring Demo Night' },
-  { date: '2026-04-11', title: 'Build Sprint: Hardware Weekend' }
+  { date: '2026-09-01', title: 'Foundry Kickoff Night', route: 'event-detail' }
 ];
 
 (function initCalendar() {
@@ -305,8 +290,8 @@ const outlookLink = document.getElementById('cal-outlook-link');
 if (outlookLink) {
   const params = new URLSearchParams({
     subject: 'Foundry Kickoff Night',
-    startdt: '2026-08-24T19:00:00',
-    enddt: '2026-08-24T21:00:00',
+    startdt: '2026-09-01T19:00:00',
+    enddt: '2026-09-01T21:00:00',
     location: 'UT Dallas — Lab 01',
     body: "First open house of the semester. Tour the space, pitch a half-formed idea, find someone to build it with."
   });
@@ -320,8 +305,8 @@ document.getElementById('add-cal-btn')?.addEventListener('click', () => {
     'PRODID:-//Comet Foundry//Events//EN',
     'BEGIN:VEVENT',
     'UID:kickoff-night-2026@cometfoundry.com',
-    'DTSTART:20260824T190000',
-    'DTEND:20260824T210000',
+    'DTSTART:20260901T190000',
+    'DTEND:20260901T210000',
     'SUMMARY:Foundry Kickoff Night',
     'LOCATION:UT Dallas — Lab 01',
     'DESCRIPTION:First open house of the semester. Tour the space\\, pitch a half-formed idea\\, find someone to build it with.',
@@ -338,6 +323,31 @@ document.getElementById('add-cal-btn')?.addEventListener('click', () => {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 });
+
+// ---- Demo Day: title reveal on scroll into view ----
+(function initDemoDayReveal() {
+  try {
+  const title = document.getElementById('demoday-title');
+  if (!title) return;
+  const reduceMotion = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (reduceMotion) {
+    title.classList.add('revealed');
+    return;
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.35 });
+
+  io.observe(title);
+  } catch (e) { console.warn('Demo Day reveal animation skipped:', e); }
+})();
 
 document.addEventListener('click', (e) => {
   const link = e.target.closest('[data-route]');
@@ -357,7 +367,7 @@ html = f"""<!DOCTYPE html>
 <title>Comet Foundry — a hacker house at UTD</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
 <style>
 {css}
 </style>
