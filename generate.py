@@ -130,7 +130,7 @@ home_body = """
     <section class="hero">
       <div class="wrap">
         <div class="eyebrow"><span class="dot"></span>LAB STATUS: OPEN</div>
-        <h1 class="mega"><span>COMET</span><span>FOUNDRY</span></h1>
+        <h1 class="mega"><span>NOT A CLUB</span><span class="orange">A FOUNDRY</span></h1>
         <div class="hero-note hand">a hacker house at UTD :)</div>
         <p class="hero-sub">A hacker house for people who'd rather build the weird thing than plan the safe one. Yes, this is technically a student org. We're figuring it out too.</p>
         <div class="hero-tags">
@@ -276,7 +276,7 @@ home_body = """
             <span class="tagpill mono">FEATURED PARTNER</span>
           </div>
           <div class="card-body">
-            <h3>Resilient Privacy</h3>
+            <h3>RESILIENT PRIVACY Inc.</h3>
             <p>Comet Foundry's founding Industry Partner — advisory only, non-voting. Coordinates mentorship and internship referrals for opted-in members.</p>
             <a class="card-link" href="partners.html">See all partners →</a>
           </div>
@@ -653,7 +653,7 @@ partners_body = """
     <section class="tight">
       <div class="wrap">
         <div class="card-grid">""" + \
-    partner_card("", "Resilient Privacy", "Comet Foundry's founding Industry Partner — advisory only, non-voting. Coordinates mentorship and internship referrals for opted-in members.", "https://www.resilientprivacy.com") + \
+    partner_card("", "RESILIENT PRIVACY Inc.", "Comet Foundry's founding Industry Partner — advisory only, non-voting. Coordinates mentorship and internship referrals for opted-in members.", "https://www.resilientprivacy.com") + \
     coming_soon_partner_card() + \
     coming_soon_partner_card() + """
         </div>
