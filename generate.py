@@ -12,7 +12,7 @@ HEAD = """<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
-<link rel="icon" type="image/png" href="assets/comet-foundry-logo.png">
+<link rel="icon" type="image/png" href="assets/favicon.png">
 </head>
 <body data-page="{page}">
 
@@ -595,6 +595,24 @@ team_body = """
 
     <section class="tight">
       <div class="wrap">
+        <span class="section-label">FOUNDER</span>
+        <div class="profile-grid">
+          <a class="profile-card founder-card" href="founder.html">
+            <div class="profile-photo lead">
+              <span class="profile-tag">MEET THE FOUNDER →</span>
+              <img src="assets/vishva-patel.jpg" alt="Vishva Patel">
+            </div>
+            <div class="profile-body">
+              <h3>Vishva Patel</h3>
+              <div class="profile-role">Founder</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
         <span class="section-label">EXECUTIVE BOARD</span>
         <div class="profile-grid">""" + exec_cards + """
         </div>
@@ -620,6 +638,93 @@ team_body = """
     </section>
 """
 write("team.html", "Team", "team", team_body)
+
+# ---------------- FOUNDER ----------------
+founder_body = """
+    <section class="founder-hero">
+      <div class="wrap">
+        <div class="breadcrumb"><a href="index.html">Home</a> / <a href="team.html">Team</a> / Founder</div>
+        <span class="eyebrow-label">FIELD NOTE #001</span>
+        <h1>The Founder</h1>
+
+        <div class="founder-intro">
+          <div class="founder-portrait">
+            <img src="assets/vishva-patel.jpg" alt="Vishva Patel">
+          </div>
+          <div class="founder-meta">
+            <h2>Vishva Patel</h2>
+            <div class="role">FOUNDER / COMET FOUNDRY</div>
+            <div class="sub">UT DALLAS / FALL 2026</div>
+            <p class="intro">I started Comet Foundry because I was tired of watching good ideas die in group chats. This page is less of a bio and more of a field note — why this exists, what I believe, and what I'm hoping you'll do with it.</p>
+            <span class="brand-line hand">Someone had to try. :)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="founder-section">
+      <div class="wrap">
+        <span class="tag-label">FOUNDER'S LETTER</span>
+        <h2 class="big">Why I Started This</h2>
+        <div class="founder-letter">
+          <p>There are a lot of smart people at UTD. There are a lot of ideas. There are a lot of people who want to build something. I wanted to create a place where those things could actually meet.</p>
+          <p>Most of the good ideas I heard died in group chats. Someone would say something interesting, a few people would hype it up, and then everyone went back to their normal week — not because the idea was bad, just because there was nowhere for it to go next.</p>
+          <p>Comet Foundry started because I got tired of watching that happen.</p>
+          <p>I wanted a place where you don't need to have it all figured out before you start — where "I have no idea if this will work" is a good enough reason to try something, not a reason to wait. Where you build the rough version instead of just talking about the polished one you'll get to eventually.</p>
+          <p>I wanted a place where ambitious, curious people actually run into each other — not because there's a mixer on the calendar, but because they're both in the room working on something. That's usually how the good collaborations start. Not from a pitch. From someone next to you asking what you're building and actually meaning it.</p>
+          <p>I wanted a place where your own ideas get pushed back on, because that's the only way they get better. Where failing at something doesn't mean you failed — it means you tried a thing most people never get around to trying.</p>
+          <p>And mostly, I wanted a place where an idea has a real shot at becoming something. Not a slide deck. Not a pitch. An actual thing that exists because you made it.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="founder-section founder-quote">
+      <div class="wrap">
+        <span class="tag-label" style="text-align:left;">MY BET</span>
+        <blockquote>"I believe the best student experiences don't start with a perfectly planned idea. They start with someone saying: 'What if we tried?'"</blockquote>
+        <p class="vision-text">Comet Foundry should become a place where students don't have to wait for permission to start something. A place where someone can walk in with an unfinished idea, meet someone who wants to help, and actually make something.</p>
+        <p class="vision-text">The goal isn't simply to run more student events. The goal is to build a culture — people who build, question, experiment, collaborate, and keep showing up. <span class="mono" style="font-size:13px; color:var(--ink-soft);">STATUS: BUILDING</span></p>
+      </div>
+    </section>
+
+    <section class="founder-section founder-note-to-students">
+      <div class="wrap">
+        <span class="tag-label">A NOTE TO STUDENTS</span>
+        <h2 class="big">A Note To Students</h2>
+        <div class="founder-letter">
+          <p>You don't need to be the smartest person in the room. You don't need a startup. You don't need a five-person team. You don't need a perfectly polished idea.</p>
+          <p>You just need to show up.</p>
+          <p>Show up curious. Find something worth building. Find someone worth building with. Ask a question you don't know the answer to. Try something that might fail.</p>
+          <p>And if it doesn't work — good. That's what the lab is for.</p>
+          <p>Comet Foundry isn't supposed to be a place where you already have everything figured out. It's supposed to be a place where you figure it out together.</p>
+          <p>So bring the weird idea. Bring the half-built project. Bring the question you've been sitting on. We'll see what happens.</p>
+        </div>
+        <div class="founder-signoff">
+          <div class="see-you">See You In The Lab.</div>
+          <div class="dash-vishva">— VISHVA</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="founder-contact">
+      <div class="wrap">
+        <span class="tag-label" style="text-align:center;">WANT TO TALK?</span>
+        <div class="founder-contact-name">Vishva Patel</div>
+        <div class="founder-contact-role">FOUNDER / COMET FOUNDRY</div>
+        <div class="founder-contact-rows">
+          <div>
+            <span class="row-label">EMAIL</span>
+            <a href="mailto:vishva.patel@resilientprivacy.com">vishva.patel@resilientprivacy.com</a>
+          </div>
+          <div>
+            <span class="row-label">LINKEDIN</span>
+            <a href="https://www.linkedin.com/in/vishva-vp/" target="_blank" rel="noopener">linkedin.com/in/vishva-vp →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+"""
+write("founder.html", "Founder", "founder", founder_body)
 
 
 # ---------------- PARTNERS ----------------

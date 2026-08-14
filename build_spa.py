@@ -9,6 +9,14 @@ with open("assets/comet-foundry-logo.png", "rb") as f:
     LOGO_B64 = base64.b64encode(f.read()).decode("ascii")
 LOGO_DATA_URI = "data:image/png;base64," + LOGO_B64
 
+with open("assets/favicon.png", "rb") as f:
+    FAVICON_B64 = base64.b64encode(f.read()).decode("ascii")
+FAVICON_DATA_URI = "data:image/png;base64," + FAVICON_B64
+
+with open("assets/vishva-patel.jpg", "rb") as f:
+    PHOTO_B64 = base64.b64encode(f.read()).decode("ascii")
+PHOTO_DATA_URI = "data:image/jpeg;base64," + PHOTO_B64
+
 # Extra SPA-only styling: route visibility
 css += """
 .route{ display:none; }
@@ -23,6 +31,7 @@ ROUTES = [
     ("programs", "/programs", "Programs", g.programs_body),
     ("projects", "/projects", "Projects", g.projects_body),
     ("team", "/team", "Team", g.team_body),
+    ("founder", "/founder", "Founder", g.founder_body),
     ("partners", "/partners", "Partners", g.partners_body),
     ("events", "/events", "Events", g.events_body),
     ("event-detail", "/events/kickoff-night", "Kickoff Night", g.event_detail_body),
@@ -38,6 +47,7 @@ HREF_MAP = {
     "programs.html": ("#/programs", "programs"),
     "projects.html": ("#/projects", "projects"),
     "team.html": ("#/team", "team"),
+    "founder.html": ("#/founder", "founder"),
     "partners.html": ("#/partners", "partners"),
     "events.html": ("#/events", "events"),
     "event-kickoff-night.html": ("#/events/kickoff-night", "event-detail"),
@@ -52,6 +62,8 @@ def fix_links(body):
         body = body.replace(f'href="{old}"', f'href="{hash_href}" data-route="{route_id}"')
     # dead-end placeholder links -> inert, so they don't jump anywhere unexpected
     body = re.sub(r'href="#"(?!/)', 'href="javascript:void(0)"', body)
+    # embed the founder photo instead of a relative file path
+    body = body.replace('src="assets/vishva-patel.jpg"', f'src="{PHOTO_DATA_URI}"')
     return body
 
 sections = []
@@ -375,7 +387,7 @@ html = f"""<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="{LOGO_DATA_URI}">
+<link rel="icon" type="image/png" href="{FAVICON_DATA_URI}">
 <style>
 {css}
 </style>
