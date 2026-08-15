@@ -22,6 +22,10 @@
 - [Founder](https://www.cometfoundry.com/founder.html): background on founder Vishva Patel
 - [Partners](https://www.cometfoundry.com/partners.html): industry partners, including Resilient Privacy Inc.
 - [Events](https://www.cometfoundry.com/events.html): event calendar
+- [Blog](https://www.cometfoundry.com/blog.html): essays from founder Vishva Patel on building, risk, and startups
+  - [The 9-5 Felt Safe. It Wasn't.](https://www.cometfoundry.com/blog-9-5-felt-safe.html)
+  - [Nobody Tells You the First Idea Usually Doesn't Work](https://www.cometfoundry.com/blog-first-idea-doesnt-work.html)
+  - [We Trained a Generation to Follow Instructions. The World Needs People Who Can Build.](https://www.cometfoundry.com/blog-build-dont-follow.html)
 - [Apply](https://www.cometfoundry.com/apply.html): how to join
 - [Privacy Policy](https://www.cometfoundry.com/privacy-policy.html)
 - [Terms of Use](https://www.cometfoundry.com/terms-of-use.html)

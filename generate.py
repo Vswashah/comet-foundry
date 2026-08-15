@@ -738,7 +738,7 @@ founder_body = """
             <h2>Vishva Patel</h2>
             <div class="role">FOUNDER / COMET FOUNDRY</div>
             <div class="sub">UT DALLAS / SPRING 25 ALUMNUS</div>
-            <p class="intro"><strong>2× Founder. Cybersecurity Professional. Entrepreneur.</strong><br>10+ years of experience across enterprise technology, cybersecurity, and innovation. Former President of the Graduate Student Assembly at UT Dallas and student advocate representing 250,000+ students across the UT System. Passionate about building companies, communities, and opportunities that create lasting impact.</p>
+            <p class="intro"><strong>Somewhere in this hacker house, the next billionaire is debugging their first prototype. I built the house.</strong><br>Founder &amp; Investor, Comet Foundry || 2x Founder || 10+ Years Cybersecurity || UTD Alumni &amp; Former GSA President</p>
             <span class="brand-line hand">Someone had to try. :)</span>
           </div>
         </div>
@@ -1039,12 +1039,93 @@ def coming_soon_post_card():
             <p>This spot's open. Notes and updates from the lab will show up here as they're written.</p>
           </div>"""
 
+def blog_post_shell(title, date_label, iso_date, paragraphs, href):
+    body_html = "\n".join(f"          <p>{p}</p>" for p in paragraphs)
+    ld = f"""
+    <script type="application/ld+json">
+    {{
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "{title}",
+      "datePublished": "{iso_date}",
+      "author": {{ "@type": "Person", "name": "Vishva Patel" }},
+      "publisher": {{ "@type": "Organization", "name": "Comet Foundry", "url": "https://www.cometfoundry.com/" }},
+      "mainEntityOfPage": "https://www.cometfoundry.com/{href}"
+    }}
+    </script>"""
+    return f"""
+    <section class="page-hero">
+      <div class="wrap">
+        <div class="breadcrumb"><a href="index.html">Home</a> / <a href="blog.html">Blog</a> / {title}</div>
+        <h1>{title}</h1>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap">
+        <div class="legal-body">
+          <div class="legal-effective">{date_label} &nbsp;|&nbsp; THINK LAB</div>
+{body_html}
+        </div>
+        <div style="max-width:760px; margin:44px auto 0; padding-top:24px; border-top:1px solid var(--line);">
+          <a class="lab-link mono" href="blog.html" style="color:var(--ink-soft); border-bottom:1px solid var(--line); text-decoration:none; font-size:13px;">← Back to all posts</a>
+        </div>
+      </div>
+    </section>
+{ld}
+"""
+
+blog_post_1 = blog_post_shell(
+    "The 9-5 Felt Safe. It Wasn't.",
+    "AUG 15, 2026",
+    "2026-08-15",
+    [
+        "A friend of mine got laid off last year. Six years at the same company, good reviews every cycle, never missed a deadline. Then one Tuesday morning, a 15-minute call, and it was over. No warning, no say in it, no plan B because he'd never needed one — the job was the plan.",
+        "I used to think startups were the risky path and a steady job was the safe one. I don't think that anymore. A job is a bet you make on one company, one manager, one budget cycle, and you don't get a vote in any of it. If it goes well, you get a raise. If it doesn't, you get an email.",
+        "Building something of your own is a different kind of risk — the kind where the outcome is actually tied to your effort. It's harder in the short term. There's no bi-weekly paycheck telling you you're doing fine. But over a longer stretch, you end up owning something instead of renting your income from someone else.",
+        "I'm not saying everyone should quit their job tomorrow. Most people can't, and that's a real constraint, not a mindset problem. What I am saying is: stop assuming the safe-looking path is actually the safe one. Ask what happens to you the day the company decides it doesn't need you anymore. If the answer is \"not much,\" that's worth sitting with.",
+        "That's part of why we started Comet Foundry. Not everyone in the house has quit their job. Some are building nights and weekends, testing the waters before jumping. That's fine — the point isn't recklessness. The point is not mistaking comfort for security.",
+    ],
+    "blog-9-5-felt-safe.html",
+)
+write("blog-9-5-felt-safe.html", "The 9-5 Felt Safe. It Wasn't.", "blog", blog_post_1, desc="A steady job isn't the safe path it looks like — it's a bet on one company, one manager, one budget cycle you don't get a vote in. Notes from Comet Foundry's Think Lab.")
+
+blog_post_2 = blog_post_shell(
+    "Nobody Tells You the First Idea Usually Doesn't Work",
+    "AUG 08, 2026",
+    "2026-08-08",
+    [
+        "When I started my first company, I thought I had it figured out. I hadn't. It didn't work, and for a while that felt like proof I wasn't cut out for this.",
+        "Looking back, almost everyone I know who's built something real has a version of this story — an idea that didn't land, a launch nobody showed up for, months spent on something that quietly died. The founders you hear about are usually on their second or third attempt by the time anyone's paying attention. You just never hear about attempt one.",
+        "That gap between the story you're told and the reality is what makes people quit too early. They assume struggling on the first try means they're not built for this, so they go back to something safer before they get the chance to actually get good at it.",
+        "Nobody's born knowing how to hire, how to talk to a customer who hates your product, or how to keep going after a partner backs out. You learn that by doing it badly the first time and less badly the second. That's not failure — that's just what the process looks like from the inside.",
+        "This is the actual reason a house like Comet Foundry matters more than another mentorship program or another pitch deck template. Put people in the same kitchen while they're on attempt one, two, and three at the same time, and the lesson passes between them faster than any advice could. You watch someone else survive their bad idea, and it makes yours feel a lot less like the end of the road.",
+    ],
+    "blog-first-idea-doesnt-work.html",
+)
+write("blog-first-idea-doesnt-work.html", "Nobody Tells You the First Idea Usually Doesn't Work", "blog", blog_post_2, desc="Almost everyone who's built something real has a first attempt that quietly died. You just never hear about it. Notes from Comet Foundry's Think Lab.")
+
+blog_post_3 = blog_post_shell(
+    "We Trained a Generation to Follow Instructions. The World Needs People Who Can Build.",
+    "AUG 01, 2026",
+    "2026-08-01",
+    [
+        "I think about this a lot when I talk to students at UT Dallas — smart, capable people who can solve almost any problem you hand them, as long as someone else defines the problem first. That's not a knock on them. It's what school actually teaches: follow the instructions well, get the grade, repeat.",
+        "Nobody hands you the muscle for the opposite — deciding what the problem even is, building something nobody asked for yet, being wrong in public until you're right. That skill isn't taught. It's practiced, usually by accident, usually by people who ended up around others doing the same thing.",
+        "I don't think this is a small gap. As more of the predictable work — the kind school prepares you for — gets automated, the people who stay hard to replace are the ones who can build from nothing, not the ones who can execute instructions well. That shift is already happening. Most people just haven't felt it yet.",
+        "I didn't get this muscle from a classroom. I got it from failing at my first company, from late nights during a hackathon that didn't even place first, from being around other people trying to build things and watching how they thought. Comet Foundry exists because I don't think that kind of learning should be an accident. It should be something people can walk into on purpose.",
+        "You don't need permission to build something. You need a room where building is normal, and people around you who won't let you talk yourself out of it. That's the bet we're making with this house — that if you put enough people like that in one place, some of them are going to build something the rest of us will be talking about in a few years.",
+    ],
+    "blog-build-dont-follow.html",
+)
+write("blog-build-dont-follow.html", "We Trained a Generation to Follow Instructions. The World Needs People Who Can Build.", "blog", blog_post_3, desc="School teaches you to follow instructions well. Nobody teaches you to decide what the problem even is. Notes from Comet Foundry's Think Lab.")
+
 blog_body = """
     <section class="page-hero">
       <div class="wrap">
         <div class="breadcrumb"><a href="index.html">Home</a> / Blog</div>
         <h1>Notes From The Lab</h1>
-        <span class="hero-note hand">under construction lol</span>
+        <span class="hero-note hand">fresh from the lab</span>
         <p class="lede">Updates, postmortems, and the occasional controversial opinion from Think Lab.</p>
       </div>
     </section>
@@ -1052,9 +1133,9 @@ blog_body = """
     <section class="tight">
       <div class="wrap">
         <div class="card-grid">""" + \
-    coming_soon_post_card() + \
-    coming_soon_post_card() + \
-    coming_soon_post_card() + """
+    post_card("", "AUG 15, 2026", "The 9-5 Felt Safe. It Wasn't.", "A friend got laid off after six years of good reviews. That's when I stopped thinking of a steady job as the safe path.", "blog-9-5-felt-safe.html") + \
+    post_card("alt", "AUG 08, 2026", "Nobody Tells You the First Idea Usually Doesn't Work", "Almost everyone who's built something real has a first attempt that quietly died. You just never hear about it.", "blog-first-idea-doesnt-work.html") + \
+    post_card("alt2", "AUG 01, 2026", "We Trained a Generation to Follow Instructions. The World Needs People Who Can Build.", "School teaches you to follow instructions well. Nobody teaches you to decide what the problem even is.", "blog-build-dont-follow.html") + """
         </div>
       </div>
     </section>
