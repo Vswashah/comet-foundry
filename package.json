@@ -1,0 +1,7 @@
+{
+  "name": "comet-foundry",
+  "private": true,
+  "engines": {
+    "node": "20.x"
+  }
+}

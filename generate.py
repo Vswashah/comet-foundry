@@ -4,6 +4,30 @@ OUT = os.path.dirname(os.path.abspath(__file__))
 
 OG_BASE_URL = "https://www.cometfoundry.com"
 
+ORG_JSONLD = """  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Comet Foundry",
+    "url": "https://www.cometfoundry.com/",
+    "logo": "https://www.cometfoundry.com/assets/comet-foundry-logo.png",
+    "email": "info@cometfoundry.com",
+    "foundingDate": "2026",
+    "founder": { "@type": "Person", "name": "Vishva Patel" },
+    "sameAs": [
+      "https://www.linkedin.com/company/cometfoundry/",
+      "https://www.instagram.com/cometfoundry",
+      "https://discord.com/invite/Hdg8VBFUW"
+    ],
+    "location": {
+      "@type": "Place",
+      "name": "UT Dallas",
+      "address": { "@type": "PostalAddress", "addressLocality": "Richardson", "addressRegion": "TX", "addressCountry": "US" }
+    }
+  }
+  </script>
+"""
+
 HEAD = """<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +42,9 @@ HEAD = """<!DOCTYPE html>
 <meta property="og:description" content="{desc}">
 <meta property="og:url" content="{og_url}">
 <meta property="og:image" content="{og_image}">
-<meta name="twitter:card" content="summary">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="{og_url}">
 <meta name="twitter:title" content="{page_title}">
 <meta name="twitter:description" content="{desc}">
@@ -28,10 +54,17 @@ HEAD = """<!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <link rel="icon" type="image/png" href="assets/favicon.png?v=4">
-</head>
+<link rel="icon" type="image/png" sizes="16x16" href="assets/icon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#15161A">
+{org_jsonld}</head>
 <body data-page="{page}">
 
-  <div id="door">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div id="door" role="dialog" aria-modal="true" aria-labelledby="door-title">
     <div class="door-status mono" id="door-status"><span class="dot"></span>LAB STATUS: CLOSED</div>
     <div id="door-title">COMET<br>FOUNDRY</div>
     <button id="open-btn">OPEN LAB →</button>
@@ -41,7 +74,7 @@ HEAD = """<!DOCTYPE html>
   <main id="main">
     <header class="nav">
       <div class="wrap">
-        <a class="brand-mark" href="index.html"><img src="assets/comet-foundry-logo.png" alt="Comet Foundry" class="nav-logo">COMET FOUNDRY</a>
+        <a class="brand-mark" href="index.html"><img src="assets/comet-foundry-logo.png" alt="Comet Foundry" class="nav-logo" width="400" height="357">COMET FOUNDRY</a>
         <nav class="nav-links">
           <a href="about.html" data-nav="about">About</a>
           <a href="programs.html" data-nav="programs">Programs</a>
@@ -80,7 +113,7 @@ FOOTER = """
       <div class="wrap">
         <div class="footer-top">
           <div class="footer-brand">
-            <img src="assets/comet-foundry-logo.png" alt="Comet Foundry" class="footer-logo">
+            <img src="assets/comet-foundry-logo.png" alt="Comet Foundry" class="footer-logo" width="400" height="357">
             <h4>Comet Foundry</h4>
             <p class="footer-brand-line">UT Dallas / Fall 2026</p>
             <p class="footer-brand-line hand">Someone had to try. :)</p>
@@ -141,6 +174,7 @@ FOOTER = """
   </div>
 
   <script src="script.js"></script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
 """
@@ -151,9 +185,9 @@ def write(fname, title, page, body, desc=None, full_title=None):
     desc = desc or DEFAULT_DESC
     page_title = full_title or f"{title} — Comet Foundry"
     og_url = OG_BASE_URL + ("/" if fname == "index.html" else "/" + fname)
-    og_image = OG_BASE_URL + "/assets/comet-foundry-logo.png"
+    og_image = OG_BASE_URL + "/assets/og-image.png"
     with open(os.path.join(OUT, fname), "w") as f:
-        f.write(HEAD.format(page_title=page_title, page=page, desc=desc, og_url=og_url, og_image=og_image))
+        f.write(HEAD.format(page_title=page_title, page=page, desc=desc, og_url=og_url, og_image=og_image, org_jsonld=ORG_JSONLD))
         f.write(body)
         f.write(FOOTER)
 
@@ -167,7 +201,7 @@ home_body = """
         <p class="hero-sub">A hacker house for people who'd rather build the weird thing than plan the safe one. Yes, this is technically a student org. We're figuring it out too.</p>
         <div class="hero-tags">
           <span class="tag">NO PERFECT IDEAS. JUST INTERESTING ONES.</span>
-          <span class="tag">MADE AT UTD</span>
+          <span class="tag">BORN AT UTD</span>
         </div>
       </div>
     </section>
@@ -297,47 +331,18 @@ home_body = """
       </div>
     </section>
 
-    <section class="tight">
-      <div class="wrap">
-        <div class="sec-head">
-          <span class="num">EXP 002 / WHO'S IN THE ROOM</span>
-          <h2>Partner Spotlight</h2>
-        </div>
-        <div class="partner-card" style="max-width:640px;">
-          <div class="card-media">
-            <img src="assets/resilient-privacy-logo.jpg" alt="Resilient Privacy Inc.">
-            <span class="tagpill mono">FEATURED PARTNER</span>
+    <!-- ================= HACKER CAMPUS MAP ================= -->
+    <section class="campus">
+      <div class="campus-inner">
+        <div class="campus-stage">
+          <div class="campus-map" aria-hidden="true">
+<img class="campus-map-svg" src="assets/campus-map.svg" alt="Map of the continental United States with Comet Foundry's node in Texas" width="950" height="580" loading="lazy">
           </div>
-          <div class="card-body">
-            <h3>RESILIENT PRIVACY Inc.</h3>
-            <p><a href="https://www.resilientprivacy.com/?utm_source=chatgpt.com" target="_blank" rel="noopener">Resilient Privacy</a> is building an AI-native, unified platform for IT and cybersecurity operations.</p>
-            <a class="card-link" href="partners.html">See all partners →</a>
+          <h2 class="campus-title">THE<br>HACKER<br>CAMPUS</h2>
+          <div class="campus-cta">
+            <span class="campus-cta-note hand">not in your school yet?</span>
+            <a class="campus-cta-btn" href="https://forms.cloud.microsoft/r/FPR6PcbQaN" target="_blank" rel="noopener">start a node →</a>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="tight">
-      <div class="wrap">
-        <div class="sec-head">
-          <span class="num">EXP 003 / WHAT'S HAPPENING</span>
-          <h2>Next Up</h2>
-        </div>
-        <div class="event-card">
-          <span class="event-annot hand">you should probably come to this</span>
-          <div class="event-left">
-            <div class="event-date">SEP 01 / 7:00 PM</div>
-            <h3>Foundry Kickoff Night</h3>
-            <p>First open house of the semester. Tour the space, pitch a half-formed idea, find someone to build it with.</p>
-          </div>
-          <div class="event-right">
-            <div class="row"><span>STATUS</span><b>EXPERIMENT IN PROGRESS</b></div>
-            <div class="row"><span>LOCATION</span><b>UT Dallas — Lab 01</b></div>
-            <a class="rsvp-btn" href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=HR0ojU2c90uxbgMtFd6fbIhHjy7i2rpHt7VcaeT3yedUOVlFMEpKR0dYMDhLUzAyMjQ2QklROFVaVC4u&route=shorturl" target="_blank" rel="noopener">RSVP →</a>
-          </div>
-        </div>
-        <div style="text-align:right; margin-top:24px;">
-          <a class="lab-link mono" href="events.html" style="color:var(--ink-soft); border-bottom:1px solid var(--line); text-decoration:none; font-size:13px;">See all events →</a>
         </div>
       </div>
     </section>
@@ -345,14 +350,14 @@ home_body = """
     <section class="join">
       <div class="wrap">
         <div class="sec-head center">
-          <span class="num mono">EXP 004 / GET IN</span>
+          <span class="num mono">EXP 002 / GET IN</span>
           <h2>Join The Foundry</h2>
           <p>One email. We'll tell you when the door's open.</p>
         </div>
         <form class="join-form" id="join-form">
           <input type="email" name="email" placeholder="you@utdallas.edu" required aria-label="Email address">
           <input type="text" name="company" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
-          <button type="submit">JOIN FOUNDRY →</button>
+          <button type="submit">SUBSCRIBE →</button>
         </form>
         <div class="join-note">NO SPAM. NO PERFECT IDEAS. JUST INTERESTING ONES. &nbsp;·&nbsp; <a href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=HR0ojU2c90uxbgMtFd6fbIhHjy7i2rpHt7VcaeT3yedUMkQwTTU4TkpUNFczMVQzS0cwUUVaWEw0WC4u&route=shorturl&b2b=true" target="_blank" rel="noopener" style="color:var(--ink-soft);">Full application →</a></div>
       </div>
@@ -430,6 +435,37 @@ about_body = """
       </div>
     </section>
 
+    <section class="tight">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="num">FAQ</span>
+          <h2>Questions People Actually Ask</h2>
+        </div>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>What is Comet Foundry?</summary>
+            <p>A hacker house at UT Dallas — a physical space and community for students to build projects, ship ideas, and find people to build them with. It's technically a student org, but it doesn't run like one: no recurring meetings, no permission required to start something.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Do I need to be a CS major to join?</summary>
+            <p>No. CS major, art major, undeclared — if you want to build, there's a seat. We care what you want to make, not what's on your résumé.</p>
+          </details>
+          <details class="faq-item">
+            <summary>How do I apply?</summary>
+            <p>Head to the <a href="apply.html">Apply page</a> and tell us what you want to build — that's most of the application.</p>
+          </details>
+          <details class="faq-item">
+            <summary>Where is Comet Foundry located?</summary>
+            <p>UT Dallas, Lab 01.</p>
+          </details>
+          <details class="faq-item">
+            <summary>How do I find out about upcoming events?</summary>
+            <p>Check the <a href="events.html">Events page</a> or RSVP to <a href="event-kickoff-night.html">Foundry Kickoff Night</a>, the first open house of the semester.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
     <section class="join">
       <div class="wrap">
         <div class="sec-head center">
@@ -439,8 +475,42 @@ about_body = """
         <a class="rsvp-btn" href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=HR0ojU2c90uxbgMtFd6fbIhHjy7i2rpHt7VcaeT3yedUMkQwTTU4TkpUNFczMVQzS0cwUUVaWEw0WC4u&route=shorturl&b2b=true" target="_blank" rel="noopener" style="background:var(--ink); color:var(--paper);">APPLY TO JOIN →</a>
       </div>
     </section>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Comet Foundry?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A hacker house at UT Dallas — a physical space and community for students to build projects, ship ideas, and find people to build them with. It's technically a student org, but it doesn't run like one: no recurring meetings, no permission required to start something." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need to be a CS major to join?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. CS major, art major, undeclared — if you want to build, there's a seat. We care what you want to make, not what's on your résumé." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I apply?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Head to the Apply page and tell us what you want to build — that's most of the application." }
+        },
+        {
+          "@type": "Question",
+          "name": "Where is Comet Foundry located?",
+          "acceptedAnswer": { "@type": "Answer", "text": "UT Dallas, Lab 01." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I find out about upcoming events?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Check the Events page or RSVP to Foundry Kickoff Night, the first open house of the semester." }
+        }
+      ]
+    }
+    </script>
 """
-write("about.html", "About", "about", about_body)
+write("about.html", "About", "about", about_body, desc="Comet Foundry started because the good ideas at UT Dallas kept dying in group chats instead of becoming things. Here's the origin story.")
 
 # ---------------- PROGRAMS ----------------
 programs_body = """
@@ -520,7 +590,7 @@ programs_body = """
       </div>
     </section>
 """
-write("programs.html", "Programs", "programs", programs_body)
+write("programs.html", "Programs", "programs", programs_body, desc="Four labs, not departments: Build, Think, Network, and After Hours. Drop into whichever matches what you're in the mood for this week.")
 
 # ---------------- PROJECTS ----------------
 def coming_soon_card():
@@ -561,7 +631,7 @@ projects_body = """
       </div>
     </section>
 """
-write("projects.html", "Projects", "projects", projects_body)
+write("projects.html", "Projects", "projects", projects_body, desc="Member-built projects from Comet Foundry, UT Dallas's hacker house. This wall is just getting started — check back as things ship.")
 
 # ---------------- TEAM ----------------
 def person_card(lead, role, email_slug, seat_label=None):
@@ -650,7 +720,7 @@ team_body = """
       </div>
     </section>
 """
-write("team.html", "Team", "team", team_body)
+write("team.html", "Team", "team", team_body, desc="Meet the Comet Foundry team — Executive Board and Officer seats, most still open. Apply if one fits you.")
 
 # ---------------- FOUNDER ----------------
 founder_body = """
@@ -662,7 +732,7 @@ founder_body = """
 
         <div class="founder-intro">
           <div class="founder-portrait">
-            <img src="assets/vishva-patel.jpg" alt="Vishva Patel">
+            <img src="assets/vishva-patel.jpg" alt="Vishva Patel" width="760" height="760">
           </div>
           <div class="founder-meta">
             <h2>Vishva Patel</h2>
@@ -689,7 +759,7 @@ founder_body = """
           <div class="letter-signature">
             <span class="letter-signoff hand">— Vishva</span>
             <div class="letter-author">
-              <img src="assets/vishva-patel.jpg" alt="Vishva Patel" class="letter-avatar">
+              <img src="assets/vishva-patel.jpg" alt="Vishva Patel" class="letter-avatar" width="760" height="760">
               <div>
                 <div class="letter-author-name">Vishva Patel</div>
                 <div class="letter-author-role">Founder, Comet Foundry</div>
@@ -736,23 +806,25 @@ founder_body = """
         <div class="founder-contact-rows">
           <div>
             <span class="row-label">EMAIL</span>
-            <a href="mailto:vishva.patel@resilientprivacy.com">vishva.patel@resilientprivacy.com</a>
+            <a href="mailto:vishva.patel@cometfoundry.com">vishva.patel@cometfoundry.com</a>
           </div>
           <div>
             <span class="row-label">LINKEDIN</span>
-            <a href="https://www.linkedin.com/in/vishva-vp/" target="_blank" rel="noopener">linkedin.com/in/vishva-vp →</a>
+            <a class="founder-linkedin" href="https://www.linkedin.com/in/vishva-vp/" target="_blank" rel="noopener" aria-label="Vishva Patel on LinkedIn">
+              <svg viewBox="0 0 24 24"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4v15h-4V8zm7.5 0h3.8v2.05h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V23h-4v-6.9c0-1.65-.03-3.77-2.3-3.77-2.3 0-2.65 1.8-2.65 3.65V23h-4V8z"/></svg>
+            </a>
           </div>
         </div>
       </div>
     </section>
 """
-write("founder.html", "Founder", "founder", founder_body)
+write("founder.html", "Founder", "founder", founder_body, desc="Vishva Patel, founder of Comet Foundry — a 2x founder and cybersecurity professional building a hacker house at UT Dallas.")
 
 
 # ---------------- PARTNERS ----------------
-def partner_card(grad, name, blurb, url=None, logo=None):
+def partner_card(grad, name, blurb, url=None, logo=None, logo_w=500, logo_h=552):
     link_html = f'<a class="card-link" href="{url}" target="_blank" rel="noopener">Visit site →</a>' if url else ""
-    media_html = f'<img src="{logo}" alt="{name}">' if logo else ""
+    media_html = f'<img src="{logo}" alt="{name}" width="{logo_w}" height="{logo_h}">' if logo else ""
     return f"""
           <div class="partner-card">
             <div class="card-media {grad}">{media_html}</div>
@@ -802,7 +874,7 @@ partners_body = """
       </div>
     </section>
 """
-write("partners.html", "Partners", "partners", partners_body)
+write("partners.html", "Partners", "partners", partners_body, desc="Comet Foundry's industry partners fund experiments, send mentors, and show up for demo nights. Meet Resilient Privacy Inc. and others.")
 
 # ---------------- EVENTS ----------------
 def event_row(date, title, blurb, href):
@@ -884,7 +956,7 @@ events_body = """
       </div>
     </section>
 """
-write("events.html", "Events", "events", events_body)
+write("events.html", "Events", "events", events_body, desc="Build sprints, critique nights, demo nights, and Foundry Kickoff Night — see what's happening at Comet Foundry, UT Dallas.")
 
 # ---------------- EVENT DETAIL ----------------
 event_detail_body = """
@@ -924,8 +996,27 @@ event_detail_body = """
         <a class="rsvp-btn" href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=HR0ojU2c90uxbgMtFd6fbIhHjy7i2rpHt7VcaeT3yedUOVlFMEpKR0dYMDhLUzAyMjQ2QklROFVaVC4u&route=shorturl" target="_blank" rel="noopener" style="background:var(--ink); color:var(--paper);">RSVP →</a>
       </div>
     </section>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      "name": "Foundry Kickoff Night",
+      "description": "First open house of the semester. Tour the space, pitch a half-formed idea out loud, and find someone to build it with.",
+      "startDate": "2026-09-01T19:00:00-05:00",
+      "endDate": "2026-09-01T21:00:00-05:00",
+      "eventStatus": "https://schema.org/EventScheduled",
+      "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+      "location": {
+        "@type": "Place",
+        "name": "UT Dallas — Lab 01",
+        "address": { "@type": "PostalAddress", "addressLocality": "Richardson", "addressRegion": "TX", "addressCountry": "US" }
+      },
+      "organizer": { "@type": "Organization", "name": "Comet Foundry", "url": "https://www.cometfoundry.com/" }
+    }
+    </script>
 """
-write("event-kickoff-night.html", "Kickoff Night", "events", event_detail_body)
+write("event-kickoff-night.html", "Kickoff Night", "events", event_detail_body, desc="Foundry Kickoff Night — the first open house of the semester at Comet Foundry, UT Dallas. Tour the space, pitch an idea, find a team.")
 
 # ---------------- BLOG ----------------
 def post_card(grad, date, title, excerpt, href):
@@ -968,7 +1059,7 @@ blog_body = """
       </div>
     </section>
 """
-write("blog.html", "Blog", "blog", blog_body)
+write("blog.html", "Blog", "blog", blog_body, desc="Updates, postmortems, and the occasional controversial opinion from Comet Foundry's Think Lab.")
 
 # ---------------- APPLY ----------------
 apply_body = """
@@ -985,24 +1076,24 @@ apply_body = """
       <div class="wrap">
         <form class="apply-form" hidden>
           <div>
-            <label for="name">Name</label>
-            <input type="text" id="name" required>
+            <label for="apply-name">Name</label>
+            <input type="text" id="apply-name" required>
           </div>
           <div>
-            <label for="email">Email</label>
-            <input type="email" id="email" required>
+            <label for="apply-email">Email</label>
+            <input type="email" id="apply-email" required>
           </div>
           <div>
-            <label for="year">Major / Year</label>
-            <input type="text" id="year" placeholder="e.g. CS, Sophomore">
+            <label for="apply-year">Major / Year</label>
+            <input type="text" id="apply-year" placeholder="e.g. CS, Sophomore">
           </div>
           <div>
-            <label for="build">What do you want to build?</label>
-            <textarea id="build" placeholder="A rough idea is plenty."></textarea>
+            <label for="apply-build">What do you want to build?</label>
+            <textarea id="apply-build" placeholder="A rough idea is plenty."></textarea>
           </div>
           <div>
-            <label for="heard">How'd you hear about us?</label>
-            <select id="heard">
+            <label for="apply-heard">How'd you hear about us?</label>
+            <select id="apply-heard">
               <option>A friend</option>
               <option>An event</option>
               <option>Social media</option>
@@ -1015,7 +1106,7 @@ apply_body = """
       </div>
     </section>
 """
-write("apply.html", "Apply", "apply", apply_body)
+write("apply.html", "Apply", "apply", apply_body, desc="Apply to Comet Foundry, UT Dallas's hacker house. Tell us what you want to build — that's most of the application.")
 
 # ---------------- LEGAL (Privacy Policy / Terms of Use) ----------------
 def legal_shell(title, effective, body_html):
@@ -1054,10 +1145,18 @@ privacy_policy_body = legal_shell("Privacy Policy", "EFFECTIVE DATE: AUGUST 1, 2
             <li>Content of messages submitted through contact, application, or feedback forms</li>
             <li>Payment or donation information where applicable; such transactions are processed by a third-party payment processor, and Comet Foundry does not collect or store full payment card details</li>
           </ul>
+          <p>Membership applications, officer applications, and event RSVPs are collected through Microsoft Forms rather than directly on the Site; see Section 3.4 for the full list of third-party service providers Comet Foundry uses.</p>
           <p><strong>3.2 Information Collected Automatically</strong></p>
-          <p>As of the Effective Date, the Site does not use analytics or tracking software. If Comet Foundry adopts an analytics platform in the future, it will use Google Analytics and update this Policy accordingly, including opt-out information.</p>
+          <p>The Site uses Vercel Web Analytics, a privacy-focused analytics service that does not use cookies and does not collect personally identifiable information. It records aggregate, anonymized usage data such as page views, referrer, and general geographic region (country/region level) to help us understand how the Site is used. Comet Foundry does not use any other analytics or advertising-tracking software.</p>
           <p><strong>3.3 Information from Third Parties</strong></p>
           <p>Publicly available professional information (for example, from LinkedIn) that a member voluntarily elects to include in an organizational directory or mentorship profile.</p>
+          <p><strong>3.4 Third-Party Service Providers</strong></p>
+          <p>Comet Foundry uses the following third-party services to operate the Site and process the information described above. Each processes information under its own privacy policy and terms:</p>
+          <ul>
+            <li><strong>Microsoft Forms</strong> — processes membership and officer applications, event RSVPs, and partner inquiry submissions.</li>
+            <li><strong>Resend</strong> — delivers the email generated when someone submits the "Join The Foundry" email sign-up on the Site.</li>
+            <li><strong>Vercel</strong> — hosts the Site and provides the Web Analytics service described in Section 3.2.</li>
+          </ul>
 
           <h2>4. How We Use Information</h2>
           <ul>
@@ -1167,7 +1266,26 @@ terms_of_use_body = legal_shell("Terms of Use", "EFFECTIVE DATE: AUGUST 1, 2026 
           </div>
 """)
 
-write("privacy-policy.html", "Privacy Policy", "privacy-policy", privacy_policy_body)
-write("terms-of-use.html", "Terms of Use", "terms-of-use", terms_of_use_body)
+write("privacy-policy.html", "Privacy Policy", "privacy-policy", privacy_policy_body, desc="How Comet Foundry collects, uses, and protects information for cometfoundry.com and related programs.")
+write("terms-of-use.html", "Terms of Use", "terms-of-use", terms_of_use_body, desc="Terms governing use of the Comet Foundry website, cometfoundry.com, and related services.")
+
+# ---------------- 404 ----------------
+not_found_body = """
+    <section class="page-hero">
+      <div class="wrap">
+        <div class="breadcrumb"><a href="index.html">Home</a> / Not Found</div>
+        <h1>404</h1>
+        <span class="hero-note hand">this experiment failed</span>
+        <p class="lede">Nothing's built at this address. The page you're looking for either moved or never shipped.</p>
+      </div>
+    </section>
+
+    <section class="tight">
+      <div class="wrap" style="text-align:center;">
+        <a class="rsvp-btn" href="index.html" style="background:var(--ink); color:var(--paper);">Back to home →</a>
+      </div>
+    </section>
+"""
+write("404.html", "Not Found", "404", not_found_body, desc="This page doesn't exist. Head back to the Comet Foundry homepage.")
 
 print("done")

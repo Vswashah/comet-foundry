@@ -1,9 +1,38 @@
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Best-effort, single-instance rate limit. Vercel functions can scale to
+// multiple warm instances, so this does not guarantee a hard global cap --
+// but it does stop the common case (a script hammering the endpoint in a
+// tight loop, which lands on the same warm instance) without needing an
+// external store like Redis/Vercel KV. Revisit if abuse persists.
+const WINDOW_MS = 60_000;
+const MAX_PER_WINDOW = 5;
+const hits = new Map(); // ip -> array of request timestamps
+
+function isRateLimited(ip) {
+  const now = Date.now();
+  const timestamps = (hits.get(ip) || []).filter((t) => now - t < WINDOW_MS);
+  timestamps.push(now);
+  hits.set(ip, timestamps);
+
+  // Bound memory: drop the oldest-tracked IP once the map gets large.
+  if (hits.size > 5000) {
+    hits.delete(hits.keys().next().value);
+  }
+
+  return timestamps.length > MAX_PER_WINDOW;
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ ok: false, error: 'Method not allowed' });
+  }
+
+  const ip = (req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown').split(',')[0].trim();
+  if (isRateLimited(ip)) {
+    res.setHeader('Retry-After', '60');
+    return res.status(429).json({ ok: false, error: 'Too many requests, try again in a minute' });
   }
 
   const { email, company } = req.body || {};

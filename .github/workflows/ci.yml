@@ -48,6 +48,30 @@ jobs:
           "
           node --check _spa_extracted.js
 
+      - name: Check script.js and api/subscribe.js syntax
+        run: |
+          node --check script.js
+          node --check api/subscribe.js
+
+      - name: Validate JSON config files
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('vercel.json'))"
+          node -e "JSON.parse(require('fs').readFileSync('manifest.json'))"
+          node -e "JSON.parse(require('fs').readFileSync('package.json'))"
+
+      - name: Validate JSON-LD structured data is well-formed
+        run: |
+          python3 -c "
+          import re, json, glob
+          for f in sorted(glob.glob('*.html')):
+              if f == 'comet-foundry-spa.html':
+                  continue
+              html = open(f, encoding='utf-8').read()
+              for block in re.findall(r'<script type=\"application/ld\+json\">(.*?)</script>', html, re.S):
+                  json.loads(block)
+          print('all JSON-LD blocks valid')
+          "
+
       - name: Check internal links resolve to real files
         run: |
           python3 - <<'EOF'

@@ -21,6 +21,10 @@ with open("assets/resilient-privacy-logo.jpg", "rb") as f:
     PARTNER_LOGO_B64 = base64.b64encode(f.read()).decode("ascii")
 PARTNER_LOGO_DATA_URI = "data:image/jpeg;base64," + PARTNER_LOGO_B64
 
+with open("assets/campus-map.svg", "rb") as f:
+    CAMPUS_MAP_B64 = base64.b64encode(f.read()).decode("ascii")
+CAMPUS_MAP_DATA_URI = "data:image/svg+xml;base64," + CAMPUS_MAP_B64
+
 # Extra SPA-only styling: route visibility
 css += """
 .route{ display:none; }
@@ -70,6 +74,8 @@ def fix_links(body):
     body = body.replace('src="assets/vishva-patel.jpg"', f'src="{PHOTO_DATA_URI}"')
     # embed the Resilient Privacy logo instead of a relative file path
     body = body.replace('src="assets/resilient-privacy-logo.jpg"', f'src="{PARTNER_LOGO_DATA_URI}"')
+    # embed the Hacker Campus dot map instead of a relative file path
+    body = body.replace('src="assets/campus-map.svg"', f'src="{CAMPUS_MAP_DATA_URI}"')
     return body
 
 sections = []
@@ -430,6 +436,7 @@ html = f"""<!DOCTYPE html>
 <script>
 {JS}
 </script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
 """

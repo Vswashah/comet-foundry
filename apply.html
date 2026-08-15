@@ -4,28 +4,59 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Apply — Comet Foundry</title>
-<meta name="description" content="A hacker house at UT Dallas. No perfect ideas. Just interesting ones.">
+<meta name="description" content="Apply to Comet Foundry, UT Dallas's hacker house. Tell us what you want to build — that's most of the application.">
 <link rel="canonical" href="https://www.cometfoundry.com/apply.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Comet Foundry">
 <meta property="og:title" content="Apply — Comet Foundry">
-<meta property="og:description" content="A hacker house at UT Dallas. No perfect ideas. Just interesting ones.">
+<meta property="og:description" content="Apply to Comet Foundry, UT Dallas's hacker house. Tell us what you want to build — that's most of the application.">
 <meta property="og:url" content="https://www.cometfoundry.com/apply.html">
-<meta property="og:image" content="https://www.cometfoundry.com/assets/comet-foundry-logo.png">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://www.cometfoundry.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://www.cometfoundry.com/apply.html">
 <meta name="twitter:title" content="Apply — Comet Foundry">
-<meta name="twitter:description" content="A hacker house at UT Dallas. No perfect ideas. Just interesting ones.">
-<meta name="twitter:image" content="https://www.cometfoundry.com/assets/comet-foundry-logo.png">
+<meta name="twitter:description" content="Apply to Comet Foundry, UT Dallas's hacker house. Tell us what you want to build — that's most of the application.">
+<meta name="twitter:image" content="https://www.cometfoundry.com/assets/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <link rel="icon" type="image/png" href="assets/favicon.png?v=4">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/icon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#15161A">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Comet Foundry",
+    "url": "https://www.cometfoundry.com/",
+    "logo": "https://www.cometfoundry.com/assets/comet-foundry-logo.png",
+    "email": "info@cometfoundry.com",
+    "foundingDate": "2026",
+    "founder": { "@type": "Person", "name": "Vishva Patel" },
+    "sameAs": [
+      "https://www.linkedin.com/company/cometfoundry/",
+      "https://www.instagram.com/cometfoundry",
+      "https://discord.com/invite/Hdg8VBFUW"
+    ],
+    "location": {
+      "@type": "Place",
+      "name": "UT Dallas",
+      "address": { "@type": "PostalAddress", "addressLocality": "Richardson", "addressRegion": "TX", "addressCountry": "US" }
+    }
+  }
+  </script>
 </head>
 <body data-page="apply">
 
-  <div id="door">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div id="door" role="dialog" aria-modal="true" aria-labelledby="door-title">
     <div class="door-status mono" id="door-status"><span class="dot"></span>LAB STATUS: CLOSED</div>
     <div id="door-title">COMET<br>FOUNDRY</div>
     <button id="open-btn">OPEN LAB →</button>
@@ -35,7 +66,7 @@
   <main id="main">
     <header class="nav">
       <div class="wrap">
-        <a class="brand-mark" href="index.html"><img src="assets/comet-foundry-logo.png" alt="Comet Foundry" class="nav-logo">COMET FOUNDRY</a>
+        <a class="brand-mark" href="index.html"><img src="assets/comet-foundry-logo.png" alt="Comet Foundry" class="nav-logo" width="400" height="357">COMET FOUNDRY</a>
         <nav class="nav-links">
           <a href="about.html" data-nav="about">About</a>
           <a href="programs.html" data-nav="programs">Programs</a>
@@ -81,24 +112,24 @@
       <div class="wrap">
         <form class="apply-form" hidden>
           <div>
-            <label for="name">Name</label>
-            <input type="text" id="name" required>
+            <label for="apply-name">Name</label>
+            <input type="text" id="apply-name" required>
           </div>
           <div>
-            <label for="email">Email</label>
-            <input type="email" id="email" required>
+            <label for="apply-email">Email</label>
+            <input type="email" id="apply-email" required>
           </div>
           <div>
-            <label for="year">Major / Year</label>
-            <input type="text" id="year" placeholder="e.g. CS, Sophomore">
+            <label for="apply-year">Major / Year</label>
+            <input type="text" id="apply-year" placeholder="e.g. CS, Sophomore">
           </div>
           <div>
-            <label for="build">What do you want to build?</label>
-            <textarea id="build" placeholder="A rough idea is plenty."></textarea>
+            <label for="apply-build">What do you want to build?</label>
+            <textarea id="apply-build" placeholder="A rough idea is plenty."></textarea>
           </div>
           <div>
-            <label for="heard">How'd you hear about us?</label>
-            <select id="heard">
+            <label for="apply-heard">How'd you hear about us?</label>
+            <select id="apply-heard">
               <option>A friend</option>
               <option>An event</option>
               <option>Social media</option>
@@ -115,7 +146,7 @@
       <div class="wrap">
         <div class="footer-top">
           <div class="footer-brand">
-            <img src="assets/comet-foundry-logo.png" alt="Comet Foundry" class="footer-logo">
+            <img src="assets/comet-foundry-logo.png" alt="Comet Foundry" class="footer-logo" width="400" height="357">
             <h4>Comet Foundry</h4>
             <p class="footer-brand-line">UT Dallas / Fall 2026</p>
             <p class="footer-brand-line hand">Someone had to try. :)</p>
@@ -176,5 +207,6 @@
   </div>
 
   <script src="script.js"></script>
+  <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
