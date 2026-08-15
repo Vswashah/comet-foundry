@@ -33,7 +33,7 @@ HEAD = """<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{page_title}</title>
+<title>{tab_title}</title>
 <meta name="description" content="{desc}">
 <link rel="canonical" href="{og_url}">
 <meta property="og:type" content="website">
@@ -183,11 +183,14 @@ DEFAULT_DESC = "A hacker house at UT Dallas. No perfect ideas. Just interesting 
 
 def write(fname, title, page, body, desc=None, full_title=None):
     desc = desc or DEFAULT_DESC
+    # og:title/twitter:title stay page-specific (useful when a link is shared);
+    # the <title> tab title stays constant so it doesn't change per page/tab.
     page_title = full_title or f"{title} — Comet Foundry"
+    tab_title = "Comet Foundry"
     og_url = OG_BASE_URL + ("/" if fname == "index.html" else "/" + fname)
     og_image = OG_BASE_URL + "/assets/og-image.png"
     with open(os.path.join(OUT, fname), "w") as f:
-        f.write(HEAD.format(page_title=page_title, page=page, desc=desc, og_url=og_url, og_image=og_image, org_jsonld=ORG_JSONLD))
+        f.write(HEAD.format(page_title=page_title, tab_title=tab_title, page=page, desc=desc, og_url=og_url, og_image=og_image, org_jsonld=ORG_JSONLD))
         f.write(body)
         f.write(FOOTER)
 

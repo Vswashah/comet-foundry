@@ -2056,14 +2056,12 @@ if (navToggle && mobileMenu) {
 
 // ---- Router (click-delegated, not hash-event dependent) ----
 const routes = document.querySelectorAll('.route');
-const routeTitles = {};
-routes.forEach(r => { routeTitles[r.id.replace('route-', '')] = r.getAttribute('data-title'); });
 
 function navigate(routeId, skipHash) {
   const target = document.getElementById('route-' + routeId) || document.getElementById('route-home');
   routes.forEach(r => r.classList.remove('active'));
   target.classList.add('active');
-  document.title = (routeTitles[routeId] || 'Home') + ' — Comet Foundry';
+  // Tab title stays constant across routes on purpose -- see multi-page site's write().
 
   document.querySelectorAll('[data-route]').forEach(a => a.classList.remove('active'));
   document.querySelectorAll('[data-route="' + routeId + '"]').forEach(a => a.classList.add('active'));
