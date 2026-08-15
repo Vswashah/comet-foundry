@@ -349,9 +349,12 @@ section.tight{ padding:70px 0; }
 .join-form input:focus-visible{ outline:2px solid var(--blueprint); outline-offset:2px; }
 .join-form button{ background:var(--ink); color:var(--paper); border:none; font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.06em; padding:0 26px; cursor:pointer; }
 .join-form button:hover{ background:#2c2d33; }
+.join-form button:disabled{ opacity:.6; cursor:default; }
+.hp-field{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
 .join-note{ margin-top:16px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft); }
 
 .apply-form{ max-width:640px; margin:0 auto; display:flex; flex-direction:column; gap:20px; text-align:left; }
+.apply-form[hidden]{ display:none; }
 .apply-form label{ font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.05em; color:var(--ink-soft); display:block; margin-bottom:8px; }
 .apply-form input, .apply-form select, .apply-form textarea{
   width:100%; padding:14px 16px; border:1px solid var(--line); background:var(--paper-raised);
@@ -803,8 +806,9 @@ main{ visibility:visible !important; }
           <h2>Join The Foundry</h2>
           <p>One email. We'll tell you when the door's open.</p>
         </div>
-        <form class="join-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='ADDED ✓';">
-          <input type="email" placeholder="you@utdallas.edu" required aria-label="Email address">
+        <form class="join-form" id="join-form">
+          <input type="email" name="email" placeholder="you@utdallas.edu" required aria-label="Email address">
+          <input type="text" name="company" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
           <button type="submit">JOIN FOUNDRY →</button>
         </form>
         <div class="join-note">NO SPAM. NO PERFECT IDEAS. JUST INTERESTING ONES. &nbsp;·&nbsp; <a href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=HR0ojU2c90uxbgMtFd6fbIhHjy7i2rpHt7VcaeT3yedUMkQwTTU4TkpUNFczMVQzS0cwUUVaWEw0WC4u&route=shorturl&b2b=true" target="_blank" rel="noopener" style="color:var(--ink-soft);">Full application →</a></div>
@@ -1606,7 +1610,7 @@ main{ visibility:visible !important; }
 
     <section class="tight">
       <div class="wrap">
-        <form class="apply-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='SUBMITTED ✓';">
+        <form class="apply-form" hidden>
           <div>
             <label for="name">Name</label>
             <input type="text" id="name" required>

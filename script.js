@@ -3,25 +3,42 @@ const door = document.getElementById('door');
 const openBtn = document.getElementById('open-btn');
 const doorStatus = document.getElementById('door-status');
 const main = document.getElementById('main');
+const doorAlreadyOpen = sessionStorage.getItem('labDoorOpen') === '1';
+
+// main{visibility:hidden} still takes up full layout height, so the page is
+// scrollable behind the fixed door overlay unless we lock it here. Without
+// this, scrolling while the door is up leaves the revealed page mid-scroll
+// instead of at the top.
+if (door && !doorAlreadyOpen) {
+  document.documentElement.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden';
+}
 
 if (openBtn) {
   openBtn.addEventListener('click', () => {
+    // Set this immediately, not inside the setTimeout below: if the user
+    // navigates away (e.g. clicks a nav link) before the timeout fires, the
+    // flag would never be saved and the next page would show the door again.
+    sessionStorage.setItem('labDoorOpen', '1');
     doorStatus.innerHTML = '<span class="dot"></span>LAB STATUS: OPEN ✓';
     doorStatus.classList.add('open');
     openBtn.textContent = 'OPENING...';
     setTimeout(() => {
       door.classList.add('open');
       main.classList.add('ready');
-      sessionStorage.setItem('labDoorOpen', '1');
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     }, 350);
   });
 }
 
 // Skip the door animation on subsequent page navigations within the same session
-if (sessionStorage.getItem('labDoorOpen') === '1' && door) {
+if (doorAlreadyOpen && door) {
   door.classList.add('open');
   main.classList.add('ready');
   door.style.transition = 'none';
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
 }
 
 // ---- I'm bored button ----
@@ -172,6 +189,40 @@ document.getElementById('add-cal-btn')?.addEventListener('click', () => {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 });
+
+// ---- Join Foundry form ----
+const joinForm = document.getElementById('join-form');
+if (joinForm) {
+  joinForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const emailInput = joinForm.querySelector('input[type="email"]');
+    const honeypot = joinForm.querySelector('.hp-field');
+    const button = joinForm.querySelector('button');
+    if (honeypot && honeypot.value) return;
+
+    button.disabled = true;
+    button.textContent = 'JOINING...';
+
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailInput.value, company: honeypot ? honeypot.value : '' })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) {
+        button.textContent = 'ADDED ✓';
+        emailInput.value = '';
+      } else {
+        button.textContent = 'TRY AGAIN →';
+        button.disabled = false;
+      }
+    } catch (err) {
+      button.textContent = 'TRY AGAIN →';
+      button.disabled = false;
+    }
+  });
+}
 
 // ---- Demo Day: title reveal on scroll into view ----
 (function initDemoDayReveal() {

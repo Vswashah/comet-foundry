@@ -338,9 +338,12 @@ section.tight{ padding:70px 0; }
 .join-form input:focus-visible{ outline:2px solid var(--blueprint); outline-offset:2px; }
 .join-form button{ background:var(--ink); color:var(--paper); border:none; font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:.06em; padding:0 26px; cursor:pointer; }
 .join-form button:hover{ background:#2c2d33; }
+.join-form button:disabled{ opacity:.6; cursor:default; }
+.hp-field{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
 .join-note{ margin-top:16px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-soft); }
 
 .apply-form{ max-width:640px; margin:0 auto; display:flex; flex-direction:column; gap:20px; text-align:left; }
+.apply-form[hidden]{ display:none; }
 .apply-form label{ font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.05em; color:var(--ink-soft); display:block; margin-bottom:8px; }
 .apply-form input, .apply-form select, .apply-form textarea{
   width:100%; padding:14px 16px; border:1px solid var(--line); background:var(--paper-raised);

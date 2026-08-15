@@ -349,8 +349,9 @@ home_body = """
           <h2>Join The Foundry</h2>
           <p>One email. We'll tell you when the door's open.</p>
         </div>
-        <form class="join-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='ADDED ✓';">
-          <input type="email" placeholder="you@utdallas.edu" required aria-label="Email address">
+        <form class="join-form" id="join-form">
+          <input type="email" name="email" placeholder="you@utdallas.edu" required aria-label="Email address">
+          <input type="text" name="company" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
           <button type="submit">JOIN FOUNDRY →</button>
         </form>
         <div class="join-note">NO SPAM. NO PERFECT IDEAS. JUST INTERESTING ONES. &nbsp;·&nbsp; <a href="https://forms.cloud.microsoft/pages/responsepage.aspx?id=HR0ojU2c90uxbgMtFd6fbIhHjy7i2rpHt7VcaeT3yedUMkQwTTU4TkpUNFczMVQzS0cwUUVaWEw0WC4u&route=shorturl&b2b=true" target="_blank" rel="noopener" style="color:var(--ink-soft);">Full application →</a></div>
@@ -982,7 +983,7 @@ apply_body = """
 
     <section class="tight">
       <div class="wrap">
-        <form class="apply-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='SUBMITTED ✓';">
+        <form class="apply-form" hidden>
           <div>
             <label for="name">Name</label>
             <input type="text" id="name" required>
